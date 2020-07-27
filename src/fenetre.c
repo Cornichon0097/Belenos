@@ -77,7 +77,7 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
  */
 void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 {
-  XEvent evenement; /* Les événements liés à la fenêtre. */
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
   /* Modification des attributs de la fenêtre pour un affichage permanent. */
@@ -85,19 +85,19 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
   XChangeWindowAttributes(a_afficher->affichage, a_afficher->fenetre,
                           CWBackingStore, &(a_afficher->attributs));
 
-  /*  */
+  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la petite croix. */
   a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", False);
   XSetWMProtocols(a_afficher->affichage, a_afficher->fenetre, &(a_afficher->fermeture), 1);
 
   /* Ajout le fenêtre à l'écran. */
   XMapWindow(a_afficher->affichage, a_afficher->fenetre);
 
-  /* do
-  { */
+  do
+  {
     /* En attente d'un événement d'exposition de la fenêtre. */
     XNextEvent(a_afficher->affichage, &evenement);
-  /* }
-  while (evenement.type != Expose); */
+  }
+  while (evenement.type != Expose);
 }
 
 
@@ -132,20 +132,26 @@ GC recuperer_contexte_graphique(Fenetre f)
 
 
 
+/*
+ * Retourne si la fenêtre est ouverte.
+ */
 int est_ouverte(Fenetre f)
 {
-  XEvent evenement;
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
-  if (XPending(f->affichage))
+
+  /* Si un événement est en attente, il est récupéré. */
+  if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
   {
-    XNextEvent(f->affichage, &evenement);
-
-    if ((evenement.type == ClientMessage) && (evenement.xclient.data.l[0] == f->fermeture))
+    /* Si cet événement correspond à la fermeture de la fenêtre : */
+    if (evenement.xclient.data.l[0] == f->fermeture)
     {
       return 0;
     }
   }
 
+
+  /* Sinon, la fenêtre est toujours ouverte. */
   return 1;
 }
 
