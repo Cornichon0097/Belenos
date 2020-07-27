@@ -1,0 +1,42 @@
+CC = gcc
+CFLAGS = -Wall -pedantic -ansi -g
+
+RM = rm -f
+
+INCLUDE = ./include/
+SOURCE = ./src/
+OBJECT = ./obj/
+
+EXEC = executable.out
+
+OFILES = $(OBJECT)main.o \
+         $(OBJECT)fenetre.o
+
+
+but: $(OBJECT) $(EXEC)
+
+$(OBJECT):
+	mkdir $@
+
+$(EXEC): $(OFILES)
+	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
+
+$(OBJECT)main.o: $(SOURCE)main.c \
+				         $(INCLUDE)fenetre.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
+                    $(INCLUDE)fenetre.h
+	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+
+
+
+run: but
+	./$(EXEC)
+
+clean:
+	$(RM) $(OFILES)
+
+.PHONY: but \
+	      run \
+				clean
