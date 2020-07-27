@@ -38,10 +38,11 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
   /* Connexion au serveur X. */
   nouvelle->affichage = XOpenDisplay(NULL);
 
-  /* Une connexion au serveur X est nécessaire pour toutes les autres fonctions. */
+  /* Vérifie que la connexion au serveur X a réussi. */
   if (nouvelle->affichage == NULL)
   {
-    fprintf(stderr, "Impossible d'établir la connexion avec le serveur %s.\n",
+    fprintf(stderr,
+            "creer_fenetre : impossible d'établir la connexion avec le serveur %s.\n",
             XDisplayName(NULL));
     detruire_fenetre(nouvelle);
     return NULL;
@@ -60,8 +61,15 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
                                             XWhitePixel(nouvelle->affichage,
                                                        nouvelle->ecran_par_defaut));
 
-  /* Création d'écrans non affichables. Il est cependant possible de dessiner dessus.
-     Cette idée est tirée de la bibliothèque graphique de Denis Monnerat. */
+  /* Vérifie que la fenêtre a bien été créée. */
+  if (nouvelle->ecrans[0] == 0)
+  {
+    fprintf(stderr, "creer_fenetre : impossible de créer la fenetre.\n");
+    detruire_fenetre(nouvelle);
+    return NULL;
+  }
+
+  /* Création d'écrans non affichables. Il est cependant possible de dessiner dessus. */
   for (i = 1; i < NOMBRE_D_ECRANS; i++)
   {
     nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
@@ -69,6 +77,14 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
                                         largeur, hauteur,
                                         XDefaultDepth(nouvelle->affichage,
                                                       nouvelle->ecran_par_defaut));
+
+    /* Vérifie que les écrans ont bien été créés. */
+    if (nouvelle->ecrans[i] == 0)
+    {
+      fprintf(stderr, "creer_fenetre : impossible de créer les écrans pour dessiner.\n");
+      detruire_fenetre(nouvelle);
+      return NULL;
+    }
   }
 
   /* Les événements gérés par la fenêtre. */
@@ -171,17 +187,9 @@ int est_ouverte(Fenetre f)
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à detruire. */
 {
-  unsigned char i;
-
-
-  /* La mémoire dédiée aux écrans non affichables est libérée. */
-  for (i = 1; i < NOMBRE_D_ECRANS; i++)
-  {
-    XFreePixmap(a_detruire->affichage, a_detruire->ecrans[i]);
-  }
-
   /* Fermeture de l'affichage. */
   XCloseDisplay(a_detruire->affichage);
+
   /* La mémoire dédiée à la fenêtre est libérée. */
   free(a_detruire);
 }

@@ -16,14 +16,17 @@ int main(void)
   Fenetre f = creer_fenetre(X_FENETRE, Y_FENETRE, LARGEUR_FENETRE, HAUTEUR_FENETRE);
 
 
-  afficher_fenetre(f);
-
-  while (est_ouverte(f))
+  if (f)
   {
-    /* printf("test\n"); */
-  }
+    afficher_fenetre(f);
 
-  detruire_fenetre(f);
+    while (est_ouverte(f))
+    {
+      /* printf("test\n"); */
+    }
+
+    detruire_fenetre(f);
+  }
 
 
   return EXIT_SUCCESS;
