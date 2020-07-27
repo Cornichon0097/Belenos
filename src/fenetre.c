@@ -6,7 +6,7 @@
 #define NOMBRE_D_ECRANS 5U
 #define BORDURE 1U
 
-/**/
+
 /*
  * La structure d'une fenêtre.
  */
