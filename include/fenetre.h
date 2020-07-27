@@ -25,11 +25,6 @@ void afficher_fenetre(Fenetre f);
 Display * recuperer_affichage(Fenetre f);
 
 /*
- * Retourne la fenêtre d'une fenêtre.
- */
-Window recuperer_fenetre(Fenetre f);
-
-/*
  * Retourne le contexte graphique d'une fenêtre.
  */
 GC recuperer_contexte_graphique(Fenetre f);

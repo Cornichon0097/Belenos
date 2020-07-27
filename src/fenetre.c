@@ -3,6 +3,7 @@
 
 #include "../include/fenetre.h"
 
+#define NOMBRE_D_ECRANS 5U
 #define BORDURE 1U
 
 
@@ -13,10 +14,11 @@ struct fenetre
 {
   Display * affichage;            /* L'affichage. */
   int ecran_par_defaut;           /* L'écran par défaut. */
-  Window fenetre;                 /* Le fenêtre à l'écran. */
-  XSetWindowAttributes attributs; /* Les attributs de la fenêtre. */
+  Window ecrans[NOMBRE_D_ECRANS]; /* Les écrans pour dessiner. */
+  unsigned char ecran_actif;      /* L'écran actif. */
+  XSetWindowAttributes attributs; /* Les attributs. */
   GC contexte_graphique;          /* Le contexte graphique. */
-  Atom fermeture;                 /*  */
+  Atom fermeture;                 /* L'action de fermeture. */
 };
 
 
@@ -30,6 +32,7 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
                       unsigned int hauteur) /* La hauteur de la fenêtre, en pixels. */
 {
   Fenetre nouvelle = (Fenetre) malloc(sizeof(struct fenetre)); /* La nouvelle fenêtre. */
+  unsigned char i;
 
 
   /* Connexion au serveur X. */
@@ -48,22 +51,33 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
   nouvelle->ecran_par_defaut = XDefaultScreen(nouvelle->affichage);
 
   /* Création de la fenêtre. */
-  nouvelle->fenetre = XCreateSimpleWindow(nouvelle->affichage,
-                                          RootWindow(nouvelle->affichage,
-                                                     nouvelle->ecran_par_defaut),
-                                          x, y, largeur, hauteur, BORDURE,
-                                          BlackPixel(nouvelle->affichage,
-                                                     nouvelle->ecran_par_defaut),
-                                          WhitePixel(nouvelle->affichage,
-                                                     nouvelle->ecran_par_defaut));
+  nouvelle->ecrans[0] = XCreateSimpleWindow(nouvelle->affichage,
+                                            XRootWindow(nouvelle->affichage,
+                                                       nouvelle->ecran_par_defaut),
+                                            x, y, largeur, hauteur, BORDURE,
+                                            XBlackPixel(nouvelle->affichage,
+                                                       nouvelle->ecran_par_defaut),
+                                            XWhitePixel(nouvelle->affichage,
+                                                       nouvelle->ecran_par_defaut));
+
+  /* Création d'écrans non affichables. Il est cependant possible de dessiner dessus.
+     Cette idée est tirée de la bibliothèque graphique de Denis Monnerat. */
+  for (i = 1; i < NOMBRE_D_ECRANS; i++)
+  {
+    nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
+                                        XDefaultRootWindow(nouvelle->affichage),
+                                        largeur, hauteur,
+                                        XDefaultDepth(nouvelle->affichage,
+                                                      nouvelle->ecran_par_defaut));
+  }
 
   /* Les événements gérés par la fenêtre. */
-  XSelectInput(nouvelle->affichage, nouvelle->fenetre,
+  XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
                ExposureMask | KeyPressMask | ButtonPressMask);
 
   /* Le contexte graphique de la fenêtre. */
-  nouvelle->contexte_graphique = DefaultGC(nouvelle->affichage,
-                                           nouvelle->ecran_par_defaut);
+  nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
+                                            nouvelle->ecran_par_defaut);
 
 
   /* Retourne la nouvelle fenêtre. */
@@ -80,17 +94,22 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
+  /* L'écran actif. */
+  a_afficher->ecran_actif = 0;
+
   /* Modification des attributs de la fenêtre pour un affichage permanent. */
   a_afficher->attributs.backing_store = Always;
-  XChangeWindowAttributes(a_afficher->affichage, a_afficher->fenetre,
+  XChangeWindowAttributes(a_afficher->affichage,
+                          a_afficher->ecrans[a_afficher->ecran_actif],
                           CWBackingStore, &(a_afficher->attributs));
 
   /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la petite croix. */
   a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", False);
-  XSetWMProtocols(a_afficher->affichage, a_afficher->fenetre, &(a_afficher->fermeture), 1);
+  XSetWMProtocols(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif],
+                  &(a_afficher->fermeture), 1);
 
   /* Ajout le fenêtre à l'écran. */
-  XMapWindow(a_afficher->affichage, a_afficher->fenetre);
+  XMapWindow(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif]);
 
   do
   {
@@ -108,16 +127,6 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 Display * recuperer_affichage(Fenetre f)
 {
   return f->affichage;
-}
-
-
-
-/*
- * Retourne la fenêtre d'une fenêtre.
- */
-Window recuperer_fenetre(Fenetre f)
-{
-  return f->fenetre;
 }
 
 
@@ -144,7 +153,7 @@ int est_ouverte(Fenetre f)
   if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
   {
     /* Si cet événement correspond à la fermeture de la fenêtre : */
-    if (evenement.xclient.data.l[0] == f->fermeture)
+    if ((Atom) evenement.xclient.data.l[0] == f->fermeture)
     {
       return 0;
     }
@@ -162,6 +171,15 @@ int est_ouverte(Fenetre f)
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à detruire. */
 {
+  unsigned char i;
+
+
+  /* La mémoire dédiée aux écrans non affichables est libérée. */
+  for (i = 1; i < NOMBRE_D_ECRANS; i++)
+  {
+    XFreePixmap(a_detruire->affichage, a_detruire->ecrans[i]);
+  }
+
   /* Fermeture de l'affichage. */
   XCloseDisplay(a_detruire->affichage);
   /* La mémoire dédiée à la fenêtre est libérée. */
