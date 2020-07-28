@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../include/fenetre.h"
+#include "../include/file.h"
 
 #define NOMBRE_D_ECRANS 5U
 #define BORDURE 1U
@@ -19,8 +20,7 @@ struct fenetre
   XSetWindowAttributes attributs; /* Les attributs. */
   GC contexte_graphique;          /* Le contexte graphique. */
   Atom fermeture;                 /* L'action de fermeture. */
-  /* En attente : */
-  void * composants;              /* La pile des composants graphiques. */
+  file composants;              /* La pile des composants graphiques. */
 };
 
 
@@ -102,6 +102,8 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
   /* Le contexte graphique de la fenêtre. */
   nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
                                             nouvelle->ecran_par_defaut);
+
+  nouvelle->composants = creer_file();
 
 
   /* Retourne la nouvelle fenêtre. */
@@ -215,12 +217,24 @@ int est_ouverte(const Fenetre f)
 
 
 /*
+ * Ajoute un composant à une fenêtre.
+ */
+void ajouter(const Fenetre f, void * a_ajouter)
+{
+  push(&(f->composants), a_ajouter);
+}
+
+
+
+/*
  * Détruit une fenêtre.
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à detruire. */
 {
   /* Fermeture de l'affichage et de tout ce qui en est lié. */
   XCloseDisplay(a_detruire->affichage);
+
+  detruire_file();
 
   /* La mémoire dédiée à la fenêtre est libérée. */
   free(a_detruire);

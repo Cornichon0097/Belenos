@@ -40,6 +40,11 @@ GC recuperer_contexte_graphique(const Fenetre f);
 int est_ouverte(const Fenetre f);
 
 /*
+ * Ajoute un composant à une fenêtre.
+ */
+void ajouter(const Fenetre f, void * a_ajouter);
+
+/*
  * Détruit une fenêtre.
  */
 void detruire_fenetre(Fenetre a_detruire);
