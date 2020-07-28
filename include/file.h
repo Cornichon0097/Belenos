@@ -2,13 +2,21 @@
 #define PILE_H
 
 
-typedef struct file * File
+typedef struct file * File;
 
 
 
-void enqueue(File * f, void * composant);
+File creer_file();
 
-void * dequeue(File * p);
+void enqueue(File f, void * composant);
+
+void * dequeue(File f);
+
+int empty(File f);
+
+void clear(File f);
+
+void detruire_file(File a_detruire);
 
 
 #endif

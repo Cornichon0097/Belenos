@@ -20,7 +20,7 @@ struct fenetre
   XSetWindowAttributes attributs; /* Les attributs. */
   GC contexte_graphique;          /* Le contexte graphique. */
   Atom fermeture;                 /* L'action de fermeture. */
-  file composants;              /* La pile des composants graphiques. */
+  File composants;                /* La file des composants graphiques. */
 };
 
 
@@ -221,7 +221,7 @@ int est_ouverte(const Fenetre f)
  */
 void ajouter(const Fenetre f, void * a_ajouter)
 {
-  push(&(f->composants), a_ajouter);
+  enqueue(f->composants, a_ajouter);
 }
 
 
@@ -234,7 +234,7 @@ void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à detruire. */
   /* Fermeture de l'affichage et de tout ce qui en est lié. */
   XCloseDisplay(a_detruire->affichage);
 
-  detruire_file();
+  detruire_file(a_detruire->composants);
 
   /* La mémoire dédiée à la fenêtre est libérée. */
   free(a_detruire);
