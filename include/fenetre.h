@@ -8,6 +8,9 @@
 typedef struct fenetre* Fenetre;
 
 
+#include "../include/composant.h"
+
+
 
 /*
  * Crée une nouvelle fenêtre.
@@ -42,7 +45,7 @@ int est_ouverte(const Fenetre f);
 /*
  * Ajoute un composant à une fenêtre.
  */
-void ajouter(const Fenetre f, void * a_ajouter);
+void ajouter(const Fenetre f, Composant a_ajouter);
 
 /*
  * Détruit une fenêtre.

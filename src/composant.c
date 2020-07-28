@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../include/composant.h"
 
 
@@ -10,13 +12,36 @@ struct composant
 
 
 
-Composant creer_composant(Fenetre f,
-                          int x,
-                          int y)
+Composant creer_composant(int x,
+                          int y,
+                          couleur c)
 {
-  XDrawPoint(recuperer_affichage(f), recuperer_ecran(f), recuperer_contexte_graphique(f),
-             x, y);
-  XFlush(recuperer_affichage(f));
+  Composant nouveau = (Composant) malloc(sizeof(struct composant));
 
-  return NULL;
+
+  nouveau->x = x;
+  nouveau->y = y;
+  nouveau->couleur = c;
+
+
+  return nouveau;
+}
+
+
+
+void dessiner_composant(const Fenetre destination,
+                        const Composant a_dessiner)
+{
+  XSetForeground(recuperer_affichage(destination),
+                 recuperer_contexte_graphique(destination), a_dessiner->couleur);
+  XDrawPoint(recuperer_affichage(destination), recuperer_ecran(destination),
+             recuperer_contexte_graphique(destination), a_dessiner->x, a_dessiner->y);
+  XFlush(recuperer_affichage(destination));
+}
+
+
+
+void detruire_composant(Composant a_detruire)
+{
+  free(a_detruire);
 }

@@ -22,7 +22,7 @@ int main(void)
 
     while (est_ouverte(f))
     {
-      ajouter(f, creer_composant(f, 10, 10));
+      ajouter(f, creer_composant(10, 10, NOIR));
       /* printf("test\n"); */
     }
 

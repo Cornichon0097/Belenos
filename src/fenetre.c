@@ -219,9 +219,10 @@ int est_ouverte(const Fenetre f)
 /*
  * Ajoute un composant à une fenêtre.
  */
-void ajouter(const Fenetre f, void * a_ajouter)
+void ajouter(const Fenetre f, Composant a_ajouter)
 {
   enqueue(f->composants, a_ajouter);
+  dessiner_composant(f, a_ajouter);
 }
 
 

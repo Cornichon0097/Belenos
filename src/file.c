@@ -5,7 +5,7 @@
 
 struct maillon
 {
-  void * composant;
+  Composant graphique;
   struct maillon * suivant;
 };
 
@@ -32,14 +32,15 @@ File creer_file()
 
 
 
-void enqueue(File f, void * composant)
+void enqueue(File f,
+             Composant c)
 {
   struct maillon * nouveau = (struct maillon*) malloc(sizeof(struct maillon));
 
 
   if (nouveau)
   {
-    nouveau->composant = composant;
+    nouveau->graphique = c;
     nouveau->suivant = NULL;
 
     if (f->premier == NULL)
@@ -71,7 +72,7 @@ void * dequeue(File f)
   }
 
 
-  return m.composant;
+  return m.graphique;
 }
 
 

@@ -1,6 +1,8 @@
 #ifndef PILE_H
 #define PILE_H
 
+#include "../include/composant.h"
+
 
 typedef struct file * File;
 
@@ -8,7 +10,7 @@ typedef struct file * File;
 
 File creer_file();
 
-void enqueue(File f, void * composant);
+void enqueue(File f, Composant c);
 
 void * dequeue(File f);
 
