@@ -29,6 +29,9 @@ Display * recuperer_affichage(Fenetre f);
  */
 GC recuperer_contexte_graphique(Fenetre f);
 
+/*
+ * Retourne si une fenêtre est ouverte.
+ */
 int est_ouverte(Fenetre f);
 
 /*

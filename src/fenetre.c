@@ -26,13 +26,13 @@ struct fenetre
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'écran, en pixels. */
-                      int y,                /* L'ordonnée de la fenêtre à l'écran, en pixels. */
+Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pixels. */
+                      int y,                /* L'ordonnée de la fenêtre, en pixels. */
                       unsigned int largeur, /* La largeur de la fenêtre, en pixels. */
                       unsigned int hauteur) /* La hauteur de la fenêtre, en pixels. */
 {
   Fenetre nouvelle = (Fenetre) malloc(sizeof(struct fenetre)); /* La nouvelle fenêtre. */
-  unsigned char i;
+  unsigned char i;                                             /* Variable itérative. */
 
 
   /* Connexion au serveur X. */
@@ -41,10 +41,8 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
   /* Vérifie que la connexion au serveur X a réussi. */
   if (nouvelle->affichage == NULL)
   {
-    fprintf(stderr,
-            "creer_fenetre : impossible d'établir la connexion avec le serveur %s.\n",
-            XDisplayName(NULL));
-    detruire_fenetre(nouvelle);
+    fprintf(stderr, "creer_fenetre : impossible d'établir la ");
+    fprintf(stderr, "connexion avec le serveur %s.\n", XDisplayName(NULL));
     return NULL;
   }
 
@@ -64,12 +62,13 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre à l'é
   /* Vérifie que la fenêtre a bien été créée. */
   if (nouvelle->ecrans[0] == 0)
   {
-    fprintf(stderr, "creer_fenetre : impossible de créer la fenetre.\n");
+    fprintf(stderr, "creer_fenetre : impossible de créer la fenêtre.\n");
     detruire_fenetre(nouvelle);
     return NULL;
   }
 
-  /* Création d'écrans non affichables. Il est cependant possible de dessiner dessus. */
+  /* Création d'écrans non affichables. Il est cependant possible
+     de s'en servir pour dessiner. */
   for (i = 1; i < NOMBRE_D_ECRANS; i++)
   {
     nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
@@ -119,7 +118,7 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
                           a_afficher->ecrans[a_afficher->ecran_actif],
                           CWBackingStore, &(a_afficher->attributs));
 
-  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la petite croix. */
+  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
   a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", False);
   XSetWMProtocols(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif],
                   &(a_afficher->fermeture), 1);
@@ -138,7 +137,7 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 
 
 /*
- * Retourne l'affichage de la fenêtre.
+ * Retourne l'affichage d'une fenêtre.
  */
 Display * recuperer_affichage(Fenetre f)
 {
@@ -158,12 +157,26 @@ GC recuperer_contexte_graphique(Fenetre f)
 
 
 /*
- * Retourne si la fenêtre est ouverte.
+ * Retourne si une fenêtre est ouverte.
  */
 int est_ouverte(Fenetre f)
 {
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
+
+  /* Vérifie que la fenêtre existe. */
+  if (f == NULL)
+  {
+    fprintf(stderr, "Votre fenêtre n'existe pas ou plus.\n");
+    return 0;
+  }
+
+  /* Vérifie que la fenêtre a été créée correctement. */
+  if (f->affichage == NULL)
+  {
+    fprintf(stderr, "Votre fenêtre n'est pas utilisable.\n");
+    return 0;
+  }
 
   /* Si un événement est en attente, il est récupéré. */
   if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
