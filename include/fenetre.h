@@ -22,17 +22,22 @@ void afficher_fenetre(Fenetre f);
 /*
  * Retourne l'affichage d'une fenêtre.
  */
-Display * recuperer_affichage(Fenetre f);
+Display * recuperer_affichage(const Fenetre f);
+
+/*
+ * Retourne l'écran actif d'une fenêtre.
+ */
+Window recuperer_ecran(const Fenetre f);
 
 /*
  * Retourne le contexte graphique d'une fenêtre.
  */
-GC recuperer_contexte_graphique(Fenetre f);
+GC recuperer_contexte_graphique(const Fenetre f);
 
 /*
  * Retourne si une fenêtre est ouverte.
  */
-int est_ouverte(Fenetre f);
+int est_ouverte(const Fenetre f);
 
 /*
  * Détruit une fenêtre.

@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "../include/fenetre.h"
+#include "../include/composant.h"
 
 
 #define X_FENETRE 100
@@ -22,6 +22,7 @@ int main(void)
 
     while (est_ouverte(f))
     {
+      creer_composant(f, 10, 10);
       /* printf("test\n"); */
     }
 

@@ -10,7 +10,8 @@ OBJECT = ./obj/
 EXEC = executable.out
 
 OFILES = $(OBJECT)main.o \
-         $(OBJECT)fenetre.o
+         $(OBJECT)fenetre.o \
+				 $(OBJECT)composant.o
 
 
 but: $(OBJECT) $(EXEC)
@@ -29,6 +30,11 @@ $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
                     $(INCLUDE)fenetre.h
 	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
+$(OBJECT)composant.o: $(SOURCE)composant.c \
+	                    $(INCLUDE)composant.h \
+											$(INCLUDE)couleur.h \
+											$(INCLUDE)fenetre.h
+	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
 
 run: but

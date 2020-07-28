@@ -19,6 +19,8 @@ struct fenetre
   XSetWindowAttributes attributs; /* Les attributs. */
   GC contexte_graphique;          /* Le contexte graphique. */
   Atom fermeture;                 /* L'action de fermeture. */
+  /* En attente : */
+  void * composants;              /* La pile des composants graphiques. */
 };
 
 
@@ -34,6 +36,13 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
   Fenetre nouvelle = (Fenetre) malloc(sizeof(struct fenetre)); /* La nouvelle fenêtre. */
   unsigned char i;                                             /* Variable itérative. */
 
+
+  /* Vérifie que l'allocation dynamique s'est bien passée. */
+  if (nouvelle == NULL)
+  {
+    fprintf(stderr, "creer_fenetre : impossible d'allouer une mémoire suffisante.\n");
+    return NULL;
+  }
 
   /* Connexion au serveur X. */
   nouvelle->affichage = XOpenDisplay(NULL);
@@ -67,8 +76,8 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
     return NULL;
   }
 
-  /* Création d'écrans non affichables. Il est cependant possible
-     de s'en servir pour dessiner. */
+  /* Création d'écrans non affichables. Il est cependant possible de s'en servir pour
+     dessiner, au même titre que la fenêtre. */
   for (i = 1; i < NOMBRE_D_ECRANS; i++)
   {
     nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
@@ -139,7 +148,7 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 /*
  * Retourne l'affichage d'une fenêtre.
  */
-Display * recuperer_affichage(Fenetre f)
+Display * recuperer_affichage(const Fenetre f)
 {
   return f->affichage;
 }
@@ -147,9 +156,19 @@ Display * recuperer_affichage(Fenetre f)
 
 
 /*
+ * Retourne l'écran actif d'une fenêtre.
+ */
+Window recuperer_ecran(const Fenetre f)
+{
+  return f->ecrans[f->ecran_actif];
+}
+
+
+
+/*
  * Retourne le contexte graphique d'une fenêtre.
  */
-GC recuperer_contexte_graphique(Fenetre f)
+GC recuperer_contexte_graphique(const Fenetre f)
 {
   return f->contexte_graphique;
 }
@@ -159,7 +178,7 @@ GC recuperer_contexte_graphique(Fenetre f)
 /*
  * Retourne si une fenêtre est ouverte.
  */
-int est_ouverte(Fenetre f)
+int est_ouverte(const Fenetre f)
 {
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
@@ -200,7 +219,7 @@ int est_ouverte(Fenetre f)
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à detruire. */
 {
-  /* Fermeture de l'affichage. */
+  /* Fermeture de l'affichage et de tout ce qui en est lié. */
   XCloseDisplay(a_detruire->affichage);
 
   /* La mémoire dédiée à la fenêtre est libérée. */
