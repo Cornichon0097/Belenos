@@ -7,23 +7,25 @@ INCLUDE = ./include/
 SOURCE = ./src/
 OBJECT = ./obj/
 
-EXEC = executable.out
+EXEMPLE = main
+EXECUTABLE = executable.out
 
-OFILES = $(OBJECT)main.o \
+OFILES = $(OBJECT)$(EXEMPLE).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o
 
 
-but: $(OBJECT) $(EXEC)
+but: $(OBJECT) $(EXECUTABLE)
 
 $(OBJECT):
 	mkdir $@
 
-$(EXEC): $(OFILES)
+$(EXECUTABLE): $(OFILES)
 	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
 
 $(OBJECT)main.o: $(SOURCE)main.c \
+							   $(INCLUDE)couleur.h \
 				         $(INCLUDE)fenetre.h \
 								 $(INCLUDE)composant.h
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -46,7 +48,7 @@ $(OBJECT)composant.o: $(SOURCE)composant.c \
 
 
 run: but
-	./$(EXEC)
+	./$(EXECUTABLE)
 
 clean:
 	$(RM) $(OFILES)

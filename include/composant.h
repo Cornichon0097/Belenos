@@ -4,6 +4,9 @@
 #include "../include/couleur.h"
 
 
+/*
+ * La structure d'un composant.
+ */
 typedef struct composant* Composant;
 
 
@@ -11,10 +14,19 @@ typedef struct composant* Composant;
 
 
 
+/*
+ * Crée un nouveau composant.
+ */
 Composant creer_composant(int x, int y, couleur c);
 
+/*
+ * Dessine un composant. Un composant sans nature spécifique ne peut pas être dessiné.
+ */
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
 
+/*
+ * Détruit un composant.
+ */
 void detruire_composant(Composant a_detruire);
 
 

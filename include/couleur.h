@@ -2,7 +2,9 @@
 #define COULEUR_H
 
 
-/* La représentation d'une couleur. */
+/*
+ * La représentation d'une couleur.
+ */
 typedef unsigned long int couleur;
 
 

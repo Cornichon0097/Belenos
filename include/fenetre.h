@@ -4,7 +4,9 @@
 #include <X11/Xlib.h>
 
 
-/* La structure d'une fenêtre. */
+/*
+ * La structure d'une fenêtre.
+ */
 typedef struct fenetre* Fenetre;
 
 
@@ -43,7 +45,8 @@ GC recuperer_contexte_graphique(const Fenetre f);
 int est_ouverte(const Fenetre f);
 
 /*
- * Ajoute un composant à une fenêtre.
+ * Ajoute un composant à une fenêtre. Cette action a pour effet de dessiner le composant
+ * ajouté dans la fenêtre destination, sur l'écran actif.
  */
 void ajouter(const Fenetre f, Composant a_ajouter);
 

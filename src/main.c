@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "../include/couleur.h"
 #include "../include/fenetre.h"
 #include "../include/composant.h"
 

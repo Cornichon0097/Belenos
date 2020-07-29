@@ -3,81 +3,124 @@
 #include "../include/file.h"
 
 
+/*
+ * La structure d'un maillon.
+ * Un maillon se caractérise par l'information (composant) qu'il contient. Il permet
+ * aussi d'accéder au maillon suivant da la liste chaînée.
+ */
 struct maillon
 {
-  Composant graphique;
-  struct maillon * suivant;
+  Composant graphique;      /* Le composant. */
+  struct maillon * suivant; /* Le maillon suivant. */
 };
 
 
+/*
+ * La structure d'une file.
+ * La file est une liste chaînée composée de maillons. Seules les adresses du premier et
+ * du dernier maillon de la file sont sauvegardées. Les autres maillons sont accessibles
+ * à partir de ceux qui les précèdent.
+ */
 struct file
 {
-  struct maillon * premier;
-  struct maillon * dernier;
+  struct maillon * premier; /* Le premier maillon. */
+  struct maillon * dernier; /* Le dernier maillon. */
 };
 
 
 
+/*
+ * Crée une nouvelle file.
+ */
 File creer_file()
 {
-  File nouvelle = (File) malloc(sizeof(struct file));
+  File nouvelle = (File) malloc(sizeof(struct file)); /* La nouvelle file. */
 
 
-  nouvelle->premier = NULL;
-  nouvelle->dernier = NULL;
+  /* Vérifie que l'allocation dynamique s'est bien passée. */
+  if (nouvelle)
+  {
+    /* Initialisation de la file. */
+    nouvelle->premier = NULL;
+    nouvelle->dernier = NULL;
+  }
 
 
+  /* Retourne la nouvelle file. */
   return nouvelle;
 }
 
 
 
-void enqueue(File f,
-             Composant c)
+/*
+ * Ajoute un composant à (la fin d') une file.
+ */
+void enqueue(File destination,    /* La file destination. */
+             Composant a_ajouter) /* Le composant à ajouter. */
 {
-  struct maillon * nouveau = (struct maillon*) malloc(sizeof(struct maillon));
+  struct maillon * nouveau /* Le nouveau maillon. */
+    = (struct maillon*) malloc(sizeof(struct maillon));
 
 
+  /* Vérifie que l'allocation dynamique s'est bien passée. */
   if (nouveau)
   {
-    nouveau->graphique = c;
+    nouveau->graphique = a_ajouter;
+    /* Le nouveau maillon est ajouté à la fin de la file, il n'a donc pas de suivant. */
     nouveau->suivant = NULL;
 
-    if (f->premier == NULL)
+    /* Si aucun autre maillon n'est présent dans la file, alors le dernier maillon est
+       aussi le premier. */
+    if (destination->premier == NULL)
     {
-      f->premier = nouveau;
+      destination->premier = nouveau;
     }
+    /* Sinon, le nouveau maillon devient le suivant du dernier. */
     else
     {
-      f->dernier->suivant = nouveau;
+      destination->dernier->suivant = nouveau;
     }
 
-    f->dernier = nouveau;
+    /* Le nouveau maillon est maintenant le dernier de la file. */
+    destination->dernier = nouveau;
   }
 }
 
 
 
-void * dequeue(File f)
+/*
+ * Retourne le composant le plus ancien d'une file. Le maillon qui le contient est
+ * retiré de la file.
+ */
+Composant dequeue(File f) /* La file concernée. */
 {
-  struct maillon m = *(f->premier);
+  /* Le dernier maillon étant le plus récent, le plus ancien est le premier. */
+  struct maillon m = *(f->premier); /* Copie temporaire du maillon qui sera retiré. */
 
 
+  /* La mémoire dédiée au maillon est libérée. */
   free(f->premier);
+  /* Le premier maillon de la file est maintenant celui qui était second. */
   f->premier = m.suivant;
 
+  /* Si le maillon retiré n'avait pas de suivant, alors c'était le dernier de la file.
+     Par conséquent, la file est maintenant vide. */
   if (f->premier == NULL)
   {
     f->dernier = NULL;
   }
 
 
+  /* Retourne le composant le plus ancien de la file. */
   return m.graphique;
 }
 
 
 
-int empty(File f)
+/*
+ * Retourne si une file est vide.
+ */
+int empty(File f) /* La file concernée. */
 {
   if (f->premier == NULL)
   {
@@ -91,8 +134,12 @@ int empty(File f)
 
 
 
-void clear(File f)
+/*
+ * Retire tous les maillons d'une file.
+ */
+void clear(File f) /* La file concernée. */
 {
+  /* Tant que la file n'est pas vide, le maillon le plus ancien est retiré. */
   while (!empty(f))
   {
     dequeue(f);
@@ -101,8 +148,13 @@ void clear(File f)
 
 
 
-void detruire_file(File a_detruire)
+/*
+ * Détruit une file.
+ */
+void detruire_file(File a_detruire) /* La file à détruire. */
 {
+  /* La file est vidée de tous ses maillons. */
   clear(a_detruire);
+  /* La mémoire dédiée à la file est libérée. */
   free(a_detruire);
 }
