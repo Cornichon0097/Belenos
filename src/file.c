@@ -144,6 +144,7 @@ void clear(File f) /* La file concernée. */
   /* Tant que la file n'est pas vide, le maillon le plus ancien est retiré. */
   while (!empty(f))
   {
+    /* Le composant associé au maillon est aussi détruit. */
     a_detruire = dequeue(f);
     action(a_detruire).detruire(a_detruire);
   }
