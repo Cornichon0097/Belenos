@@ -11,7 +11,7 @@ OBJECT = ./obj/
 MAIN = main
 EXECUTABLE = executable.out
 
-OFILES = $(EXEMPLE)$(MAIN).o \
+OFILES = $(OBJECT)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o
