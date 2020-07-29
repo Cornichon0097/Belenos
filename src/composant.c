@@ -31,6 +31,7 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
   Composant nouveau = (Composant) malloc(sizeof(struct composant));
   /* La table virtuel d'un composant. */
   const struct vtable vtable = {&dessiner_composant, &detruire_composant};
+  /* À revoir... */
 
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
