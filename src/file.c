@@ -138,10 +138,14 @@ int empty(File f) /* La file concernée. */
  */
 void clear(File f) /* La file concernée. */
 {
+  Composant a_detruire; /* Le composant à détruire. */
+
+
   /* Tant que la file n'est pas vide, le maillon le plus ancien est retiré. */
   while (!empty(f))
   {
-    dequeue(f);
+    a_detruire = dequeue(f);
+    action(a_detruire).detruire(a_detruire);
   }
 }
 
