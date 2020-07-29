@@ -4,8 +4,8 @@
 #include "../include/fenetre.h"
 #include "../include/file.h"
 
-#define NOMBRE_D_ECRANS 5U /* Le nombre d'écrans disponibles pour dessiner. */
-#define BORDURE         1U /* La taille des bordures de la fenêtre. */
+#define NOMBRE_ECRANS 5U /* Le nombre d'écrans disponibles pour dessiner. */
+#define BORDURE       1U /* La taille des bordures de la fenêtre. */
 
 
 /*
@@ -18,7 +18,7 @@ struct fenetre
 {
   Display * affichage;            /* L'affichage, structure principale de Xlib. */
   int ecran_par_defaut;           /* L'écran par défaut. */
-  Window ecrans[NOMBRE_D_ECRANS]; /* Les écrans pour dessiner. */
+  Window ecrans[NOMBRE_ECRANS];   /* Les écrans pour dessiner. */
   unsigned char ecran_actif;      /* L'écran actif. */
   XSetWindowAttributes attributs; /* Les attributs. */
   GC contexte_graphique;          /* Le contexte graphique. */
@@ -81,7 +81,7 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
 
   /* Création d'écrans non affichables. Il est cependant possible de s'en servir pour
      dessiner, au même titre que la fenêtre. */
-  for (i = 1; i < NOMBRE_D_ECRANS; i++)
+  for (i = 1; i < NOMBRE_ECRANS; i++)
   {
     nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
                                         XDefaultRootWindow(nouvelle->affichage),

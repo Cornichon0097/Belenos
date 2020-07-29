@@ -19,7 +19,7 @@ typedef struct composant* Composant;
  */
 struct vtable
 {
-  void (*dessiner)(const Fenetre, const Composant); /* La fonction de dessin.  */
+  void (*dessiner)(const Fenetre, const Composant); /* La fonction de dessin. */
   void (*detruire)(Composant);                      /* Le destructeur. */
 };
 
@@ -36,9 +36,49 @@ Composant creer_composant(int x, int y, couleur couleur);
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
 
 /*
+ * Modifie l'abscisse d'un composant.
+ */
+void changer_x(Composant c, int x);
+
+/*
+ * Retourne l'abscisse d'un composant.
+ */
+int recuperer_x(const Composant c);
+
+/*
+ * Modifie l'ordonnée d'un composant.
+ */
+void changer_y(Composant c, int y);
+
+/*
+ * Retourne l'ordonnée d'un composant.
+ */
+int recuperer_y(const Composant c);
+
+/*
+ * Modifie la couleur d'un composant.
+ */
+void changer_couleur(Composant c, couleur couleur);
+
+/*
+ * Retourne la couleur d'un composant.
+ */
+couleur recuperer_couleur(const Composant c);
+
+/*
+ * Modifie la fonction de dessin d'un composant.
+ */
+void changer_action_dessin(Composant c, void (*dessiner)(const Fenetre, const Composant));
+
+/*
+ * Modifie le destructeur d'un composant.
+ */
+void changer_action_detruire(Composant c, void (*detruire)(const Composant));
+
+/*
  * Retourne la vtable d'un composant.
  */
-struct vtable action(Composant c);
+struct vtable action(const Composant c);
 
 /*
  * Détruit un composant.

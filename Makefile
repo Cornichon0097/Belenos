@@ -14,7 +14,8 @@ EXECUTABLE = executable.out
 OFILES = $(OBJECT)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
-				 $(OBJECT)composant.o
+				 $(OBJECT)composant.o \
+				 $(OBJECT)point.o
 
 
 but: $(OBJECT) $(EXECUTABLE)
@@ -28,7 +29,7 @@ $(EXECUTABLE): $(OFILES)
 $(OBJECT)main.o: $(EXEMPLE)main.c \
 							   $(INCLUDE)couleur.h \
 				         $(INCLUDE)fenetre.h \
-								 $(INCLUDE)composant.h
+								 $(INCLUDE)point.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
@@ -45,6 +46,11 @@ $(OBJECT)composant.o: $(SOURCE)composant.c \
 	                    $(INCLUDE)composant.h \
 											$(INCLUDE)couleur.h \
 											$(INCLUDE)fenetre.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJECT)point.o: $(SOURCE)point.c \
+	                $(INCLUDE)point.h \
+									$(INCLUDE)composant.h
 	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
 
