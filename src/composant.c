@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../include/composant.h"
 
@@ -30,7 +31,7 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
 
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
-  if (noueau)
+  if (nouveau)
   {
     /* Initialisation du composant. */
     nouveau->x = (signed char) x;
@@ -46,12 +47,12 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
 
 
 /*
- * Dessine un composant. Un composant sans nature spécifique ne peut pas être dessiné.
+ * Dessine un composant. Un simple composant ne peut pas être dessiné.
  */
 void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. */
                         const Composant a_dessiner) /* Le composant à dessiner. */
 {
-  fprintf(stderr, "dessiner : un composant ne peut pas être dessiné.\n");
+  fprintf(stderr, "dessiner : un simple composant ne peut pas être dessiné.\n");
 
   /* XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination), a_dessiner->couleur);

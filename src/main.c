@@ -21,9 +21,10 @@ int main(void)
   {
     afficher_fenetre(f);
 
+    ajouter(f, creer_composant(10, 10, NOIR));
+
     while (est_ouverte(f))
     {
-      ajouter(f, creer_composant(10, 10, NOIR));
       /* printf("test\n"); */
     }
 

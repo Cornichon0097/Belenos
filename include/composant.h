@@ -20,7 +20,7 @@ typedef struct composant* Composant;
 Composant creer_composant(int x, int y, couleur c);
 
 /*
- * Dessine un composant. Un composant sans nature spécifique ne peut pas être dessiné.
+ * Dessine un composant. Un simple composant ne peut pas être dessiné.
  */
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
 
