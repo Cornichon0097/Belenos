@@ -193,20 +193,6 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
-  /* Vérifie que la fenêtre existe. */
-  if (f == NULL)
-  {
-    fprintf(stderr, "Votre fenêtre n'existe pas ou plus.\n");
-    return 0;
-  }
-
-  /* Vérifie que la fenêtre a été créée correctement. */
-  if (f->affichage == NULL)
-  {
-    fprintf(stderr, "Votre fenêtre n'est pas utilisable.\n");
-    return 0;
-  }
-
   /* Si un événement est en attente, il est récupéré. */
   if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
   {
@@ -234,8 +220,7 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
   /* Le composant est ajouté à la file des composants graphiques. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */
-  /* Solution temporaire. */
-  dessiner_composant(destination, a_ajouter);
+  action(a_ajouter).dessiner(destination, a_ajouter);
 }
 
 

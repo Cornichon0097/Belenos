@@ -3,14 +3,15 @@ CFLAGS = -Wall -pedantic -ansi -g
 
 RM = rm -f
 
+EXEMPLE = ./exemples/
 INCLUDE = ./include/
 SOURCE = ./src/
 OBJECT = ./obj/
 
-EXEMPLE = main
+MAIN = main
 EXECUTABLE = executable.out
 
-OFILES = $(OBJECT)$(EXEMPLE).o \
+OFILES = $(EXEMPLE)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o
@@ -24,7 +25,7 @@ $(OBJECT):
 $(EXECUTABLE): $(OFILES)
 	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
 
-$(OBJECT)main.o: $(SOURCE)main.c \
+$(OBJECT)main.o: $(EXEMPLE)main.c \
 							   $(INCLUDE)couleur.h \
 				         $(INCLUDE)fenetre.h \
 								 $(INCLUDE)composant.h

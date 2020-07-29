@@ -14,7 +14,8 @@ typedef struct composant* Composant;
 
 
 /*
- * La structure de la vtable d'un composant.
+ * La structure d'une vtable d'un composant.
+ * La vtable répertorie les fonctions susceptibles de changer selon le composant.
  */
 struct vtable
 {
@@ -27,12 +28,17 @@ struct vtable
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int x, int y, couleur c);
+Composant creer_composant(int x, int y, couleur couleur);
 
 /*
  * Dessine un composant. Un simple composant ne peut pas être dessiné.
  */
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
+
+/*
+ * Retourne la vtable d'un composant.
+ */
+struct vtable action(Composant c);
 
 /*
  * Détruit un composant.

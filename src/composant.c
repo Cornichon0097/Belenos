@@ -11,11 +11,11 @@
  */
 struct composant
 {
-  signed char x;                 /* L'abscisse, en pixels. */
-  signed char y;                 /* L'ordonnée, en pixels. */
-  couleur couleur;               /* La couleur. */
+  signed char x;         /* L'abscisse, en pixels. */
+  signed char y;         /* L'ordonnée, en pixels. */
+  couleur couleur;       /* La couleur. */
   /* D'autres enregistrements sont à prévoir. */
-  const struct vtable * actions; /* Les actions disponibles. */
+  struct vtable actions; /* Les actions disponibles. */
 };
 
 
@@ -23,15 +23,12 @@ struct composant
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
-                          int y,     /* L'ordonnée du composant, en pixels. */
-                          couleur c) /* La couleur du composant. */
+Composant creer_composant(int x,           /* L'abscisse du composant, en pixels. */
+                          int y,           /* L'ordonnée du composant, en pixels. */
+                          couleur couleur) /* La couleur du composant. */
 {
   /* Le nouveau composant. */
   Composant nouveau = (Composant) malloc(sizeof(struct composant));
-  /* La table virtuel d'un composant. */
-  const struct vtable vtable = {&dessiner_composant, &detruire_composant};
-  /* À revoir... */
 
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
@@ -40,8 +37,9 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
     /* Initialisation du composant. */
     nouveau->x = (signed char) x;
     nouveau->y = (signed char) y;
-    nouveau->couleur = c;
-    nouveau->actions = &vtable;
+    nouveau->couleur = couleur;
+    nouveau->actions.dessiner = &dessiner_composant;
+    nouveau->actions.detruire = &detruire_composant;
   }
 
 
@@ -65,6 +63,16 @@ void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. 
              recuperer_contexte_graphique(destination),
              (int) a_dessiner->x, (int) a_dessiner->y);
   XFlush(recuperer_affichage(destination)); */
+}
+
+
+
+/*
+ * Retourne la vtable d'un composant.
+ */
+struct vtable action(Composant c) /* Le composant concerné. */
+{
+  return c->actions;
 }
 
 
