@@ -64,7 +64,7 @@ void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. 
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, /* Le composant concerné. */
-               int x)       /* La nouvelle abscisse. */
+               int x)       /* La nouvelle abscisse du composant. */
 {
   c->x = (signed char) x;
 }
@@ -85,7 +85,7 @@ int recuperer_x(const Composant c) /* Le composant concerné. */
  * Modifie l'ordonnée d'un composant.
  */
 void changer_y(Composant c, /* Le composant concerné. */
-               int y)       /* La nouvelle ordonnée. */
+               int y)       /* La nouvelle ordonnée du composant. */
 {
   c->y = (signed char) y;
 }
@@ -119,6 +119,27 @@ void changer_couleur(Composant c,     /* Le composant concerné. */
 couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 {
   return c->couleur;
+}
+
+
+
+/*
+ * Modifie la nature d'un composant.
+ */
+void changer_nature(Composant c,   /* Le composant concerné. */
+                    void * nature) /* La nouvelle nature du composant. */
+{
+  c->nature = nature;
+}
+
+
+
+/*
+ * Retourne la nature d'un composant.
+ */
+void * recuperer_nature(const Composant c)
+{
+  return c->nature;
 }
 
 

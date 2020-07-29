@@ -66,6 +66,16 @@ void changer_couleur(Composant c, couleur couleur);
 couleur recuperer_couleur(const Composant c);
 
 /*
+ * Modifie la nature d'un composant.
+ */
+void changer_nature(Composant c, void * nature);
+
+/*
+ * Retourne la nature d'un composant.
+ */
+void * recuperer_nature(const Composant c);
+
+/*
  * Modifie la fonction de dessin d'un composant.
  */
 void changer_action_dessin(Composant c, void (*dessiner)(const Fenetre, const Composant));

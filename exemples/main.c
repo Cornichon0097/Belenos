@@ -2,7 +2,7 @@
 
 #include "../include/couleur.h"
 #include "../include/fenetre.h"
-#include "../include/point.h"
+#include "../include/rectangle.h"
 
 
 #define X_FENETRE 100
@@ -21,7 +21,7 @@ int main(void)
   {
     afficher_fenetre(f);
 
-    ajouter(f, creer_point(10, 10, ROUGE));
+    ajouter(f, creer_rectangle(10, 10, 100, 100, ROUGE));
 
     while (est_ouverte(f))
     {
