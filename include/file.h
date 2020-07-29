@@ -7,7 +7,7 @@
 /*
  * La structure d'une file.
  */
-typedef struct file * File;
+typedef struct file* File;
 
 
 

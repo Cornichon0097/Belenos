@@ -58,8 +58,8 @@ File creer_file()
 void enqueue(File destination,    /* La file destination. */
              Composant a_ajouter) /* Le composant à ajouter. */
 {
-  struct maillon * nouveau /* Le nouveau maillon. */
-    = (struct maillon*) malloc(sizeof(struct maillon));
+  /* Le nouveau maillon. */
+  struct maillon * nouveau = (struct maillon*) malloc(sizeof(struct maillon));
 
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */

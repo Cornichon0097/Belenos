@@ -11,10 +11,11 @@
  */
 struct composant
 {
-  signed char x;   /* L'abscisse, en pixels. */
-  signed char y;   /* L'ordonnée, en pixels. */
-  couleur couleur; /* La couleur. */
+  signed char x;                 /* L'abscisse, en pixels. */
+  signed char y;                 /* L'ordonnée, en pixels. */
+  couleur couleur;               /* La couleur. */
   /* D'autres enregistrements sont à prévoir. */
+  const struct vtable * actions; /* Les actions disponibles. */
 };
 
 
@@ -26,8 +27,10 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
                           int y,     /* L'ordonnée du composant, en pixels. */
                           couleur c) /* La couleur du composant. */
 {
-  Composant nouveau /* Le nouveau composant. */
-    = (Composant) malloc(sizeof(struct composant));
+  /* Le nouveau composant. */
+  Composant nouveau = (Composant) malloc(sizeof(struct composant));
+  /* La table virtuel d'un composant. */
+  const struct vtable vtable = {&dessiner_composant, &detruire_composant};
 
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
@@ -37,6 +40,7 @@ Composant creer_composant(int x,     /* L'abscisse du composant, en pixels. */
     nouveau->x = (signed char) x;
     nouveau->y = (signed char) y;
     nouveau->couleur = c;
+    nouveau->actions = &vtable;
   }
 
 

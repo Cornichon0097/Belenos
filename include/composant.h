@@ -13,6 +13,16 @@ typedef struct composant* Composant;
 #include "../include/fenetre.h"
 
 
+/*
+ * La structure de la vtable d'un composant.
+ */
+struct vtable
+{
+  void (*dessiner)(const Fenetre, const Composant); /* La fonction de dessin.  */
+  void (*detruire)(Composant);                      /* Le destructeur. */
+};
+
+
 
 /*
  * Crée un nouveau composant.
