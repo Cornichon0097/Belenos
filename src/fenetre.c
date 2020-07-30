@@ -247,6 +247,13 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
 void ajouter(const Fenetre destination, /* La fenêtre destination. */
              Composant a_ajouter)       /* Le composant à ajouter. */
 {
+  /* Vérifie que le composant à ajouter est bien défini. */
+  if (a_ajouter == NULL)
+  {
+    fprintf(stderr, "ajouter : le composant à ajouté est nul.\n");
+    return;
+  }
+
   /* Le composant est ajouté à la file des composants graphiques. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */
