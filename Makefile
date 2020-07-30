@@ -16,7 +16,8 @@ OFILES = $(OBJECT)$(MAIN).o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o \
 				 $(OBJECT)point.o \
-				 $(OBJECT)rectangle.o
+				 $(OBJECT)rectangle.o \
+				 $(OBJECT)etiquette.o
 
 
 but: $(OBJECT) $(EXECUTABLE)
@@ -30,7 +31,7 @@ $(EXECUTABLE): $(OFILES)
 $(OBJECT)main.o: $(EXEMPLE)main.c \
 							   $(INCLUDE)couleur.h \
 				         $(INCLUDE)fenetre.h \
-								 $(INCLUDE)rectangle.h
+								 $(INCLUDE)etiquette.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
@@ -56,6 +57,11 @@ $(OBJECT)point.o: $(SOURCE)point.c \
 
 $(OBJECT)rectangle.o: $(SOURCE)rectangle.c \
 	                    $(INCLUDE)rectangle.h \
+									    $(INCLUDE)composant.h
+	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+
+$(OBJECT)etiquette.o: $(SOURCE)etiquette.c \
+	                    $(INCLUDE)etiquette.h \
 									    $(INCLUDE)composant.h
 	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
