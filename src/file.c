@@ -5,8 +5,8 @@
 
 /*
  * La structure d'un maillon.
- * Un maillon se caractérise par l'information (composant) qu'il contient. Il permet
- * aussi d'accéder au maillon suivant da la liste chaînée.
+ * Un maillon se caractérise par l'information (composant et écran) qu'il contient.
+ * Il permet aussi d'accéder au maillon suivant da la liste chaînée.
  */
 struct maillon
 {
@@ -58,8 +58,11 @@ File creer_file()
 void enqueue(File destination,    /* La file destination. */
              Composant a_ajouter) /* Le composant à ajouter. */
 {
-  struct maillon * nouveau = (struct maillon*) malloc(sizeof(struct maillon)); /* Le nouveau maillon. */
+  struct maillon * nouveau; /* Le nouveau maillon. */
 
+
+  /* Allocation d'un espace mémoire pour le maillon. */
+  nouveau = (struct maillon*) malloc(sizeof(struct maillon));
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
   if (nouveau)
@@ -68,8 +71,8 @@ void enqueue(File destination,    /* La file destination. */
     /* Le nouveau maillon est ajouté à la fin de la file, il n'a donc pas de suivant. */
     nouveau->suivant = NULL;
 
-    /* Si aucun autre maillon n'est présent dans la file, alors le dernier maillon est
-       aussi le premier. */
+    /* Si aucun autre maillon n'est présent dans la file,
+       alors le dernier maillon est aussi le premier. */
     if (destination->premier == NULL)
     {
       destination->premier = nouveau;
@@ -88,8 +91,8 @@ void enqueue(File destination,    /* La file destination. */
 
 
 /*
- * Retourne le composant le plus ancien d'une file. Le maillon qui le contient est
- * retiré de la file.
+ * Retourne le composant le plus ancien d'une file.
+ * Le maillon qui le contient est retiré de la file.
  */
 Composant dequeue(File f) /* La file concernée. */
 {
@@ -121,6 +124,7 @@ Composant dequeue(File f) /* La file concernée. */
  */
 int empty(File f) /* La file concernée. */
 {
+  /* Une file est vide si elle ne comprend pas de premier terme. */
   if (f->premier == NULL)
   {
     return 1;
@@ -144,7 +148,7 @@ void clear(File f) /* La file concernée. */
   /* Tant que la file n'est pas vide, le maillon le plus ancien est retiré. */
   while (!empty(f))
   {
-    /* Le composant associé au maillon est aussi détruit. */
+    /* Le composant associé au maillon doit aussi être détruit. */
     a_detruire = dequeue(f);
     action(a_detruire).detruire(a_detruire);
   }

@@ -1,5 +1,5 @@
-#ifndef PILE_H
-#define PILE_H
+#ifndef FILE_H
+#define FILE_H
 
 #include "../include/composant.h"
 
@@ -22,8 +22,8 @@ File creer_file();
 void enqueue(File f, Composant c);
 
 /*
- * Retourne le composant le plus ancien d'une file. Le maillon qui le contient est
- * retiré de la file.
+ * Retourne le composant le plus ancien d'une file.
+ * Le maillon qui le contient est retiré de la file.
  */
 Composant dequeue(File f);
 

@@ -7,7 +7,7 @@
 /*
  * La structure d'un composant.
  * Le composant est destiné à un usage graphique. Il est généralement dessiné et affiché
- * dans la fenêtre à laquelle il appartient. Sa nature peut varier selon le besion.
+ * dans la fenêtre à laquelle il appartient. Sa nature peut varier selon les besions.
  */
 struct composant
 {
@@ -23,12 +23,15 @@ struct composant
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int x,           /* L'abscisse du composant, en pixels. */
-                          int y,           /* L'ordonnée du composant, en pixels. */
-                          couleur couleur) /* La couleur du composant. */
+Composant creer_composant(int x,           /* L'abscisse, en pixels. */
+                          int y,           /* L'ordonnée, en pixels. */
+                          couleur couleur) /* La couleur. */
 {
-  Composant nouveau = (Composant) malloc(sizeof(struct composant)); /* Le nouveau composant. */
+  Composant nouveau; /* Le nouveau composant. */
 
+
+  /* Allocation d'un espace mémoire pour le composant. */
+  nouveau = (Composant) malloc(sizeof(struct composant));
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
   if (nouveau)
@@ -50,12 +53,13 @@ Composant creer_composant(int x,           /* L'abscisse du composant, en pixels
 
 
 /*
- * Dessine un composant. Un simple composant ne peut pas être dessiné.
+ * Dessine un composant.
  */
 void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. */
                         const Composant a_dessiner) /* Le composant à dessiner. */
 {
-  fprintf(stderr, "dessiner : un simple composant ne peut pas être dessiné.\n");
+  /* Un simple composant ne peut pas être dessiné. */
+  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
 }
 
 
@@ -64,8 +68,9 @@ void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. 
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, /* Le composant concerné. */
-               int x)       /* La nouvelle abscisse du composant. */
+               int x)       /* La nouvelle abscisse. */
 {
+  /* Modifie l'abscisse du composant. */
   c->x = (signed char) x;
 }
 
@@ -76,6 +81,7 @@ void changer_x(Composant c, /* Le composant concerné. */
  */
 int recuperer_x(const Composant c) /* Le composant concerné. */
 {
+  /* Retourne l'abscisse du composant. */
   return (int) c->x;
 }
 
@@ -85,8 +91,9 @@ int recuperer_x(const Composant c) /* Le composant concerné. */
  * Modifie l'ordonnée d'un composant.
  */
 void changer_y(Composant c, /* Le composant concerné. */
-               int y)       /* La nouvelle ordonnée du composant. */
+               int y)       /* La nouvelle ordonnée. */
 {
+  /* Modifie l'ordonnée du composant. */
   c->y = (signed char) y;
 }
 
@@ -97,6 +104,7 @@ void changer_y(Composant c, /* Le composant concerné. */
  */
 int recuperer_y(const Composant c) /* Le composant concerné. */
 {
+  /* Retourne l'ordonnée du composant. */
   return (int) c->y;
 }
 
@@ -106,8 +114,9 @@ int recuperer_y(const Composant c) /* Le composant concerné. */
  * Modifie la couleur d'un composant.
  */
 void changer_couleur(Composant c,     /* Le composant concerné. */
-                     couleur couleur) /* La nouvelle couleur du composant. */
+                     couleur couleur) /* La nouvelle couleur. */
 {
+  /* Modifie la couleur du composant. */
   c->couleur = couleur;
 }
 
@@ -118,6 +127,7 @@ void changer_couleur(Composant c,     /* Le composant concerné. */
  */
 couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 {
+  /* Retourne la couleur du composant. */
   return c->couleur;
 }
 
@@ -127,8 +137,9 @@ couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
  * Modifie la nature d'un composant.
  */
 void changer_nature(Composant c,   /* Le composant concerné. */
-                    void * nature) /* La nouvelle nature du composant. */
+                    void * nature) /* La nouvelle nature. */
 {
+  /* Modifie la nature du composant. */
   c->nature = nature;
 }
 
@@ -137,8 +148,9 @@ void changer_nature(Composant c,   /* Le composant concerné. */
 /*
  * Retourne la nature d'un composant.
  */
-void * recuperer_nature(const Composant c)
+void * recuperer_nature(const Composant c) /* Le composant concerné. */
 {
+  /* Retourne la nature du composant. */
   return c->nature;
 }
 
@@ -147,9 +159,10 @@ void * recuperer_nature(const Composant c)
 /*
  * Modifie la fonction de dessin d'un composant.
  */
-void changer_action_dessin(Composant c,                                      /* Le composant concerné. */
-                           void (*dessiner)(const Fenetre, const Composant)) /* La fonction de dessin. */
+void changer_action_dessiner(Composant c,          /* Le composant concerné. */
+                             dessinateur dessiner) /* La fonction de dessin. */
 {
+  /* Modifie la fonction de dessin du composant. */
   c->actions.dessiner = dessiner;
 }
 
@@ -158,19 +171,21 @@ void changer_action_dessin(Composant c,                                      /* 
 /*
  * Modifie le destructeur d'un composant.
  */
-void changer_action_detruire(Composant c,                       /* Le composant concerné. */
-                             void (*detruire)(const Composant)) /* Le destructeur. */
+void changer_action_detruire(Composant c,          /* Le composant concerné. */
+                             destructeur detruire) /* Le destructeur. */
 {
+  /* Modifie le destructeur du composant. */
   c->actions.detruire = detruire;
 }
 
 
 
 /*
- * Retourne la vtable d'un composant.
+ * Retourne les actions disponibles pour un composant.
  */
 struct vtable action(const Composant c) /* Le composant concerné. */
 {
+  /* Retourne les actions disponibles pour le composant. */
   return c->actions;
 }
 

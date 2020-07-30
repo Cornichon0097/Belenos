@@ -14,13 +14,24 @@ typedef struct composant* Composant;
 
 
 /*
+ * La définition de la fonction de dessin pour un composant.
+ */
+typedef void (*dessinateur)(const Fenetre, const Composant);
+
+/*
+* La définition du destructeur pour un composant.
+ */
+typedef void (*destructeur)(Composant);
+
+
+/*
  * La structure d'une vtable d'un composant.
  * La vtable répertorie les fonctions susceptibles de changer selon le composant.
  */
 struct vtable
 {
-  void (*dessiner)(const Fenetre, const Composant); /* La fonction de dessin. */
-  void (*detruire)(Composant);                      /* Le destructeur. */
+  dessinateur dessiner; /* La fonction de dessin. */
+  destructeur detruire; /* Le destructeur. */
 };
 
 
@@ -31,7 +42,7 @@ struct vtable
 Composant creer_composant(int x, int y, couleur couleur);
 
 /*
- * Dessine un composant. Un simple composant ne peut pas être dessiné.
+ * Dessine un composant.
  */
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
 
@@ -78,15 +89,15 @@ void * recuperer_nature(const Composant c);
 /*
  * Modifie la fonction de dessin d'un composant.
  */
-void changer_action_dessin(Composant c, void (*dessiner)(const Fenetre, const Composant));
+void changer_action_dessiner(Composant c, dessinateur dessiner);
 
 /*
  * Modifie le destructeur d'un composant.
  */
-void changer_action_detruire(Composant c, void (*detruire)(const Composant));
+void changer_action_detruire(Composant c, destructeur detruire);
 
 /*
- * Retourne la vtable d'un composant.
+* Retourne les actions disponibles pour un composant.
  */
 struct vtable action(const Composant c);
 

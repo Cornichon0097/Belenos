@@ -13,6 +13,9 @@
  * Il s'agit de la structure principale de l'application. La fenêtre permet l'affichage
  * de composants graphiques de différentes natures. De plus, elle centralise la majorité
  * des allocations dynamiques afin de libérer toute la mémoire avec une seule fonction.
+ * Enfin, la fenêtre comprend plusieurs écrans pour dessiner. Un composant graphique
+ * ajouté à la fenêtre peut être dessiné dans n'importe quel écran, indépendemment des
+ * autres. Cependant, seul le premier écran est affiché dans la fenêtre.
  */
 struct fenetre
 {
@@ -31,10 +34,10 @@ struct fenetre
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pixels. */
-                      int y,                /* L'ordonnée de la fenêtre, en pixels. */
-                      unsigned int largeur, /* La largeur de la fenêtre, en pixels. */
-                      unsigned int hauteur) /* La hauteur de la fenêtre, en pixels. */
+Fenetre creer_fenetre(int x,                /* L'abscisse, en pixels. */
+                      int y,                /* L'ordonnée, en pixels. */
+                      unsigned int largeur, /* La largeur, en pixels. */
+                      unsigned int hauteur) /* La hauteur, en pixels. */
 {
   Fenetre nouvelle = (Fenetre) malloc(sizeof(struct fenetre)); /* La nouvelle fenêtre. */
   unsigned char i;                                             /* Variable itérative. */
@@ -98,8 +101,8 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
     }
   }
 
-  /* Les événements gérés par la fenêtre. Ici, la fenêtre référencera dans la file des
-     événements les événements liés à l'exposition de la fenêtre, à la pression d'une
+  /* Les événements gérés par la fenêtre. Ici, la fenêtre référencera dans une file
+     dédiée les événements liés à l'exposition de la fenêtre, à la pression d'une
      touche du clavier et aux cliques de la souris. */
   XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
                ExposureMask | KeyPressMask | ButtonPressMask);
@@ -110,7 +113,7 @@ Fenetre creer_fenetre(int x,                /* L'abscisse de la fenêtre, en pix
 
   /* La file des composants graphiques. Tous les composants graphiques ajoutés à la
      à la fenêtre y seront répertoriés, afin de pouvoir libérer la mémoire qui leur
-     est allouée au moment de détruire la fenêtre. */
+     est dédiée au moment de détruire la fenêtre. */
   nouvelle->composants = creer_file();
 
 
@@ -128,8 +131,8 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
-  /* L'écran actif. */
-  a_afficher->ecran_actif = 0;
+  /* L'écran actif par défaut. */
+  a_afficher->ecran_actif = 0U;
 
   /* Modification des attributs de la fenêtre pour un affichage permanent. */
   a_afficher->attributs.backing_store = Always;
@@ -160,7 +163,30 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
  */
 Display * recuperer_affichage(const Fenetre f) /* La fenêtre concernée. */
 {
+  /* Retourne l'affichage de la fenêtre. */
   return f->affichage;
+}
+
+
+
+/*
+ * Modifie l'écran actif d'une fenêtre.
+ */
+void changer_ecran(Fenetre f,       /* La fenêtre concernée. */
+                   int ecran_actif) /* Le nouvel écran actif. */
+{
+  fprintf(stdout, "Pas encore...\n");
+  return;
+
+  /* Vérifie que le nouvel écran actif existe. */
+  if ((ecran_actif >= 0) && (ecran_actif < (int) NOMBRE_ECRANS))
+  {
+    f->ecran_actif = (unsigned char) ecran_actif;
+  }
+  else
+  {
+    fprintf(stderr, "changer_ecran : l'écran %d n'existe pas.\n", ecran_actif);
+  }
 }
 
 
@@ -170,6 +196,7 @@ Display * recuperer_affichage(const Fenetre f) /* La fenêtre concernée. */
  */
 Window recuperer_ecran(const Fenetre f) /* La fenêtre concernée. */
 {
+  /* Retourne l'écran actif de la fenêtre. */
   return f->ecrans[f->ecran_actif];
 }
 
@@ -180,6 +207,7 @@ Window recuperer_ecran(const Fenetre f) /* La fenêtre concernée. */
  */
 GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 {
+  /* Retourne le contexte graphique de la fenêtre. */
   return f->contexte_graphique;
 }
 
@@ -193,10 +221,11 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
   XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
-  /* Si un événement est en attente, il est récupéré. */
+  /* Si un événement du même type que celui de la fermeture de la fenêtre est en attente,
+     alors il est récupéré afin de pouvoir en connaître la nature. */
   if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
   {
-    /* Si cet événement correspond à la fermeture de la fenêtre : */
+    /* Vérifie si l'événement correspond à la fermeture de la fenêtre. */
     if ((Atom) evenement.xclient.data.l[0] == f->fermeture)
     {
       return 0;
@@ -204,7 +233,8 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
   }
 
 
-  /* Sinon, la fenêtre est toujours ouverte. */
+  /* Si les deux conditions précédentes ne sont pas remplies,
+     alors la fenêtre est toujours ouverte. */
   return 1;
 }
 
@@ -212,7 +242,7 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
 
 /*
  * Ajoute un composant à une fenêtre. Cette action a pour effet de dessiner le composant
- * ajouté dans la fenêtre destination, sur l'écran actif.
+ * ajouté dans la fenêtre destination, sur l'écran actif uniquement.
  */
 void ajouter(const Fenetre destination, /* La fenêtre destination. */
              Composant a_ajouter)       /* Le composant à ajouter. */
