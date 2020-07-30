@@ -4,10 +4,14 @@
 #include "../include/etiquette.h"
 
 
+/*
+ * La structure d'une étiquette.
+ * L'étiquette est un composant doté d'une chaîne de caractères.
+ */
 struct etiquette
 {
-  char * texte;
-  unsigned int longueur;
+  char * texte;          /* La chaîne de caractères. */
+  unsigned int longueur; /* La longueur de la chaîne de caractères. */
 };
 
 
