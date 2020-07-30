@@ -19,7 +19,10 @@ struct etiquette
 /*
  * Crée une nouvelle étiquette.
  */
-Etiquette creer_etiquette(int x, int y, char * texte, couleur couleur)
+Etiquette creer_etiquette(int x,           /* L'abscisse, en pixels. */
+                          int y,           /* L'ordonnée, en pixels. */
+                          char * texte,    /* La chaîne de caractères. */
+                          couleur couleur) /* La couleur. */
 {
   /* La nouvelle étiquette : */
   Etiquette nouvelle = creer_composant(x, y, couleur);
@@ -59,7 +62,8 @@ Etiquette creer_etiquette(int x, int y, char * texte, couleur couleur)
 /*
  * Dessine une étiquette.
  */
-void dessiner_etiquette(const Fenetre destination, const Etiquette a_dessiner)
+void dessiner_etiquette(const Fenetre destination,  /* La fenêtre destination. */
+                        const Etiquette a_dessiner) /* L'étiquette à dessiner. */
 {
   /* Les propriétés du composant qui en font une étiquette : */
   struct etiquette * etiquette = (struct etiquette*) recuperer_nature(a_dessiner);
@@ -81,7 +85,7 @@ void dessiner_etiquette(const Fenetre destination, const Etiquette a_dessiner)
 /*
  * Détruit une étiquette.
  */
-void detruire_etiquette(Etiquette a_detruire)
+void detruire_etiquette(Etiquette a_detruire) /* L'étiquette à détruire. */
 {
   /* La mémoire dédiée à l'étiquette est libérée. */
   free((struct etiquette*) recuperer_nature(a_detruire));
