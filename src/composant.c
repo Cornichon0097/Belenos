@@ -196,6 +196,7 @@ struct vtable action(const Composant c) /* Le composant concerné. */
  */
 void detruire_composant(Composant a_detruire) /* Le composant à détruire. */
 {
+  /* La couleur attribuée au composant est détruite. */
   detruire_couleur(a_detruire->couleur);
   /* La mémoire dédiée au composant est libérée. */
   free(a_detruire);
