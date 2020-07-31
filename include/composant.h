@@ -39,7 +39,7 @@ struct vtable
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int x, int y, couleur couleur);
+Composant creer_composant(int x, int y, Couleur couleur);
 
 /*
  * Dessine un composant.
@@ -69,12 +69,12 @@ int recuperer_y(const Composant c);
 /*
  * Modifie la couleur d'un composant.
  */
-void changer_couleur(Composant c, couleur couleur);
+void changer_couleur(Composant c, Couleur couleur);
 
 /*
  * Retourne la couleur d'un composant.
  */
-couleur recuperer_couleur(const Composant c);
+Couleur recuperer_couleur(const Composant c);
 
 /*
  * Modifie la nature d'un composant.

@@ -8,8 +8,8 @@
 
 #define X_FENETRE 100
 #define Y_FENETRE 50
-#define LARGEUR_FENETRE 500U
-#define HAUTEUR_FENETRE 500U
+#define LARGEUR_FENETRE 500
+#define HAUTEUR_FENETRE 500
 
 
 
@@ -26,7 +26,7 @@ int main(void)
 
   afficher_fenetre(f);
 
-  ajouter(f, creer_etiquette(10, 10, "Ceci est une étiquette.\0", NOIR));
+  ajouter(f, creer_etiquette(10, 10, "Ceci est une étiquette.", creer_couleur_rvb(0xff, 0, 0xff)));
 
   while (est_ouverte(f))
   {

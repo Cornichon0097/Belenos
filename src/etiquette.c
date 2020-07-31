@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "../include/etiquette.h"
@@ -22,7 +23,7 @@ struct etiquette
 Etiquette creer_etiquette(int x,           /* L'abscisse, en pixels. */
                           int y,           /* L'ordonnée, en pixels. */
                           char * texte,    /* La chaîne de caractères. */
-                          couleur couleur) /* La couleur. */
+                          Couleur couleur) /* La couleur. */
 {
   /* La nouvelle étiquette : */
   Etiquette nouvelle = creer_composant(x, y, couleur);
@@ -72,7 +73,7 @@ void dessiner_etiquette(const Fenetre destination,  /* La fenêtre destination. 
   /* Dessine l'étiquette. */
   XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination),
-                 recuperer_couleur(a_dessiner));
+                 recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
   XDrawString(recuperer_affichage(destination), recuperer_ecran(destination),
               recuperer_contexte_graphique(destination),
               recuperer_x(a_dessiner), recuperer_y(a_dessiner),

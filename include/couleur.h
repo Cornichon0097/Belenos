@@ -2,26 +2,27 @@
 #define COULEUR_H
 
 
-/*
- * La représentation d'une couleur.
- */
-typedef unsigned long int couleur;
+typedef struct couleur* Couleur;
 
 
-/* Les couleurs primaires. */
-#define ROUGE   0xff0000
-#define VERT    0x00ff00
-#define BLEU    0x0000ff
+struct couleur_rvb
+{
+  unsigned char rouge;
+  unsigned char vert;
+  unsigned char bleu;
+};
 
-/* Les couleurs secondaires. */
-#define JAUNE   0xffff00
-#define MAGENTA 0xff00ff
-#define CYAN    0x00ffff
 
-/* Autres couleurs utiles. */
-#define NOIR    0x000000
-#define GRIS    0x606060
-#define BLANC   0xffffff
+
+Couleur creer_couleur_hex(int hex);
+
+Couleur creer_couleur_rvb(int rouge, int vert, int bleu);
+
+unsigned long int recuperer_couleur_hex(Couleur c);
+
+struct couleur_rvb recuperer_couleur_rvb(Couleur c);
+
+void detruire_couleur(Couleur a_detruire);
 
 
 #endif

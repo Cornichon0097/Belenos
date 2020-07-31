@@ -17,7 +17,7 @@ typedef struct fenetre* Fenetre;
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x, int y, unsigned int largeur, unsigned int hauteur);
+Fenetre creer_fenetre(int x, int y, int largeur, int hauteur);
 
 /*
  * Affiche une fenêtre à l'écran.

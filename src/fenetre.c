@@ -4,7 +4,7 @@
 #include "../include/fenetre.h"
 #include "../include/file.h"
 
-#define NOMBRE_ECRANS 5U /* Le nombre d'écrans disponibles pour dessiner. */
+#define NOMBRE_ECRANS 5  /* Le nombre d'écrans disponibles pour dessiner. */
 #define BORDURE       1U /* La taille des bordures de la fenêtre. */
 
 
@@ -34,14 +34,17 @@ struct fenetre
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x,                /* L'abscisse, en pixels. */
-                      int y,                /* L'ordonnée, en pixels. */
-                      unsigned int largeur, /* La largeur, en pixels. */
-                      unsigned int hauteur) /* La hauteur, en pixels. */
+Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
+                      int y,       /* L'ordonnée, en pixels. */
+                      int largeur, /* La largeur, en pixels. */
+                      int hauteur) /* La hauteur, en pixels. */
 {
-  Fenetre nouvelle = (Fenetre) malloc(sizeof(struct fenetre)); /* La nouvelle fenêtre. */
-  unsigned char i;                                             /* Variable itérative. */
+  Fenetre nouvelle; /* La nouvelle fenêtre. */
+  int i;            /* Variable itérative. */
 
+
+  /* Allocation d'un espace mémoire pour le composant. */
+  nouvelle = (Fenetre) malloc(sizeof(struct fenetre));
 
   /* Vérifie que l'allocation dynamique s'est bien passée. */
   if (nouvelle == NULL)
@@ -68,7 +71,8 @@ Fenetre creer_fenetre(int x,                /* L'abscisse, en pixels. */
   nouvelle->ecrans[0] = XCreateSimpleWindow(nouvelle->affichage,
                                             XRootWindow(nouvelle->affichage,
                                                         nouvelle->ecran_par_defaut),
-                                            x, y, largeur, hauteur, BORDURE,
+                                            x, y, (unsigned int) largeur,
+                                            (unsigned int) hauteur, BORDURE,
                                             XBlackPixel(nouvelle->affichage,
                                                         nouvelle->ecran_par_defaut),
                                             XWhitePixel(nouvelle->affichage,
@@ -179,7 +183,7 @@ void changer_ecran(Fenetre f,       /* La fenêtre concernée. */
   return;
 
   /* Vérifie que le nouvel écran actif existe. */
-  if ((ecran_actif >= 0) && (ecran_actif < (int) NOMBRE_ECRANS))
+  if ((ecran_actif >= 0) && (ecran_actif < NOMBRE_ECRANS))
   {
     f->ecran_actif = (unsigned char) ecran_actif;
   }

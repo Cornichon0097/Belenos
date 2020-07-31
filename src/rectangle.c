@@ -22,7 +22,7 @@ Rectangle creer_rectangle(int x,                /* L'abscisse, en pixels. */
                           int y,                /* L'ordonnée, en pixels. */
                           unsigned int largeur, /* La largeur, en pixels. */
                           unsigned int hauteur, /* La hauteur, en pixels. */
-                          couleur couleur)      /* La couleur. */
+                          Couleur couleur)      /* La couleur. */
 {
   /* Le nouveau rectangle : */
   Rectangle nouveau = creer_composant(x, y, couleur);
@@ -72,7 +72,7 @@ void dessiner_rectangle(const Fenetre destination,  /* La fenêtre destination. 
   /* Dessine le rectangle. */
   XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination),
-                 recuperer_couleur(a_dessiner));
+                 recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
   XDrawRectangle(recuperer_affichage(destination), recuperer_ecran(destination),
                  recuperer_contexte_graphique(destination),
                  recuperer_x(a_dessiner), recuperer_y(a_dessiner),

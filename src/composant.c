@@ -13,7 +13,7 @@ struct composant
 {
   signed char x;         /* L'abscisse, en pixels. */
   signed char y;         /* L'ordonnée, en pixels. */
-  couleur couleur;       /* La couleur. */
+  Couleur couleur;       /* La couleur. */
   void * nature;         /* La nature. */
   struct vtable actions; /* Les actions disponibles. */
 };
@@ -25,7 +25,7 @@ struct composant
  */
 Composant creer_composant(int x,           /* L'abscisse, en pixels. */
                           int y,           /* L'ordonnée, en pixels. */
-                          couleur couleur) /* La couleur. */
+                          Couleur couleur) /* La couleur. */
 {
   Composant nouveau; /* Le nouveau composant. */
 
@@ -114,7 +114,7 @@ int recuperer_y(const Composant c) /* Le composant concerné. */
  * Modifie la couleur d'un composant.
  */
 void changer_couleur(Composant c,     /* Le composant concerné. */
-                     couleur couleur) /* La nouvelle couleur. */
+                     Couleur couleur) /* La nouvelle couleur. */
 {
   /* Modifie la couleur du composant. */
   c->couleur = couleur;
@@ -125,7 +125,7 @@ void changer_couleur(Composant c,     /* Le composant concerné. */
 /*
  * Retourne la couleur d'un composant.
  */
-couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
+Couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 {
   /* Retourne la couleur du composant. */
   return c->couleur;
@@ -196,6 +196,7 @@ struct vtable action(const Composant c) /* Le composant concerné. */
  */
 void detruire_composant(Composant a_detruire) /* Le composant à détruire. */
 {
+  detruire_couleur(a_detruire->couleur);
   /* La mémoire dédiée au composant est libérée. */
   free(a_detruire);
 }

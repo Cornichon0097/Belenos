@@ -14,7 +14,7 @@ typedef struct composant* Etiquette;
 /*
  * Crée une nouvelle étiquette.
  */
-Etiquette creer_etiquette(int x, int y, char * texte, couleur couleur);
+Etiquette creer_etiquette(int x, int y, char * texte, Couleur couleur);
 
 /*
  * Dessine une étiquette.
