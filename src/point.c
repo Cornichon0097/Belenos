@@ -35,10 +35,10 @@ Point creer_point(int x,           /* L'abscisse, en pixels. */
 void dessiner_point(const Fenetre destination, /* La fenêtre destination. */
                     const Point a_dessiner)    /* Le point à dessiner. */
 {
-  /* Dessine le point. */
   XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination),
                  recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
+  /* Dessine le point. */
   XDrawPoint(recuperer_affichage(destination), recuperer_ecran(destination),
              recuperer_contexte_graphique(destination),
              recuperer_x(a_dessiner), recuperer_y(a_dessiner));

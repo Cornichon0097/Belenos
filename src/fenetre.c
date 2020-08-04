@@ -61,6 +61,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   {
     fprintf(stderr, "creer_fenetre : impossible d'établir la ");
     fprintf(stderr, "connexion avec le serveur %s.\n", XDisplayName(NULL));
+    detruire_fenetre(nouvelle);
     return NULL;
   }
 
@@ -119,6 +120,8 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
      à la fenêtre y seront répertoriés, afin de pouvoir libérer la mémoire qui leur
      est dédiée au moment de détruire la fenêtre. */
   nouvelle->composants = creer_file();
+
+  /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
 
 
   /* Retourne la nouvelle fenêtre. */
@@ -217,20 +220,24 @@ GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 
 
 
-void rafraichir(const Fenetre a_rafraichir)
+/*
+ * Rafraîchit une fenêtre.
+ */
+void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
 {
-  XEvent evenement; /* L'événement lié à la fenêtre. */
-  struct maillon * m = top(a_rafraichir->composants);
+  struct maillon * m = top(a_rafraichir->composants); /* Le premier maillon. */
+  XEvent evenement;                                   /* L'événement lié à la fenêtre. */
 
 
+  /* Si un événement qui résulte d'une modification de la fenêtre est en attente,
+     alors il est récupéré et la fenêtre est rafraîchie. */
   if (XCheckMaskEvent(a_rafraichir->affichage, StructureNotifyMask, &evenement))
   {
-    printf("rafraichir\n");
-    /* XSetForeground(a_rafraichir->affichage, a_rafraichir->contexte_graphique, 0xffffff);
-    XFillRectangle(a_rafraichir->affichage, a_rafraichir->ecrans[a_rafraichir->ecran_actif],
-                   a_rafraichir->contexte_graphique, 0, 0,
-                   evenement.xresizerequest.width, evenement.xresizerequest.height); */
+    /* Efface la fenêtre. */
+    XClearWindow(a_rafraichir->affichage,
+                 a_rafraichir->ecrans[a_rafraichir->ecran_actif]);
 
+    /* Tous les composants de la fenêtre sont redessinés. */
     while (m)
     {
       action(m->graphique).dessiner(a_rafraichir, m->graphique);

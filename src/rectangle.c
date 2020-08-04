@@ -11,6 +11,7 @@ struct rectangle
 {
   unsigned char largeur; /* La largeur. */
   unsigned char hauteur; /* La hauteur. */
+  unsigned char rempli;  /* Si le rectangle est rempli. */
 };
 
 
@@ -22,7 +23,8 @@ Rectangle creer_rectangle(int x,                /* L'abscisse, en pixels. */
                           int y,                /* L'ordonnée, en pixels. */
                           unsigned int largeur, /* La largeur, en pixels. */
                           unsigned int hauteur, /* La hauteur, en pixels. */
-                          Couleur couleur)      /* La couleur. */
+                          Couleur couleur,      /* La couleur. */
+                          int rempli)           /* Si le rectangle est rempli. */
 {
   /* Le nouveau rectangle : */
   Rectangle nouveau = creer_composant(x, y, couleur);
@@ -35,6 +37,7 @@ Rectangle creer_rectangle(int x,                /* L'abscisse, en pixels. */
     /* Initialisation du rectangle. */
     rectangle->largeur = (unsigned char) largeur;
     rectangle->hauteur = (unsigned char) hauteur;
+    rectangle->rempli = (unsigned char) rempli;
   }
   /* Sinon, la création du rectangle est abandonnée. */
   else
@@ -69,14 +72,26 @@ void dessiner_rectangle(const Fenetre destination,  /* La fenêtre destination. 
   struct rectangle * rectangle = (struct rectangle*) recuperer_nature(a_dessiner);
 
 
-  /* Dessine le rectangle. */
   XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination),
                  recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
-  XDrawRectangle(recuperer_affichage(destination), recuperer_ecran(destination),
-                 recuperer_contexte_graphique(destination),
-                 recuperer_x(a_dessiner), recuperer_y(a_dessiner),
-                 (unsigned int) rectangle->largeur, (unsigned int) rectangle->hauteur);
+
+  /* Choisit la fonction adaptée pour dessiner le rectangle. */
+  if (rectangle->rempli)
+  {
+    XFillRectangle(recuperer_affichage(destination), recuperer_ecran(destination),
+                   recuperer_contexte_graphique(destination),
+                   recuperer_x(a_dessiner), recuperer_y(a_dessiner),
+                   (unsigned int) rectangle->largeur, (unsigned int) rectangle->hauteur);
+  }
+  else
+  {
+    XDrawRectangle(recuperer_affichage(destination), recuperer_ecran(destination),
+                   recuperer_contexte_graphique(destination),
+                   recuperer_x(a_dessiner), recuperer_y(a_dessiner),
+                   (unsigned int) rectangle->largeur, (unsigned int) rectangle->hauteur);
+  }
+
   XFlush(recuperer_affichage(destination));
 }
 

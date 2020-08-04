@@ -26,7 +26,7 @@ int main(void)
 
   afficher_fenetre(f);
 
-  ajouter(f, creer_rectangle(50, 50, 100, 100, creer_couleur_rvb(0xff, 0, 0xff)));
+  ajouter(f, creer_rectangle(50, 50, 100, 100, creer_couleur_rvb(0xff, 0, 0xff), 1));
 
   while (est_ouverte(f))
   {

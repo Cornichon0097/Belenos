@@ -70,10 +70,10 @@ void dessiner_etiquette(const Fenetre destination,  /* La fenêtre destination. 
   struct etiquette * etiquette = (struct etiquette*) recuperer_nature(a_dessiner);
 
 
-  /* Dessine l'étiquette. */
   XSetForeground(recuperer_affichage(destination),
                  recuperer_contexte_graphique(destination),
                  recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
+  /* Dessine l'étiquette. */
   XDrawString(recuperer_affichage(destination), recuperer_ecran(destination),
               recuperer_contexte_graphique(destination),
               recuperer_x(a_dessiner), recuperer_y(a_dessiner),
