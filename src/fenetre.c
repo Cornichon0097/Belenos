@@ -109,7 +109,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
      dédiée les événements liés à l'exposition de la fenêtre, à la pression d'une
      touche du clavier et aux cliques de la souris. */
   XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
-               ExposureMask | KeyPressMask | ButtonPressMask);
+               ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
 
   /* Le contexte graphique de la fenêtre, indispensable pour dessiner. */
   nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
@@ -217,6 +217,30 @@ GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 
 
 
+void rafraichir(const Fenetre a_rafraichir)
+{
+  XEvent evenement; /* L'événement lié à la fenêtre. */
+  struct maillon * m = top(a_rafraichir->composants);
+
+
+  if (XCheckMaskEvent(a_rafraichir->affichage, StructureNotifyMask, &evenement))
+  {
+    printf("rafraichir\n");
+    /* XSetForeground(a_rafraichir->affichage, a_rafraichir->contexte_graphique, 0xffffff);
+    XFillRectangle(a_rafraichir->affichage, a_rafraichir->ecrans[a_rafraichir->ecran_actif],
+                   a_rafraichir->contexte_graphique, 0, 0,
+                   evenement.xresizerequest.width, evenement.xresizerequest.height); */
+
+    while (m)
+    {
+      action(m->graphique).dessiner(a_rafraichir, m->graphique);
+      m = m->suivant;
+    }
+  }
+}
+
+
+
 /*
  * Retourne si une fenêtre est ouverte.
  */
@@ -251,7 +275,7 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
 void ajouter(const Fenetre destination, /* La fenêtre destination. */
              Composant a_ajouter)       /* Le composant à ajouter. */
 {
-  /* Vérifie que le composant à ajouter est bien défini. */
+  /* Vérifie que le composant à ajouter n'est pas nul. */
   if (a_ajouter == NULL)
   {
     fprintf(stderr, "ajouter : le composant à ajouté est nul.\n");

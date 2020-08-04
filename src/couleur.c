@@ -65,7 +65,7 @@ Couleur creer_couleur_rvb(int rouge, /* La composante RVB rouge. */
                           int bleu)  /* La composante RVB bleue. */
 {
   /* Retourne la nouvelle couleur. */
-  return creer_couleur((rouge * 65536 + vert * 256 + bleu), rouge, vert, bleu);
+  return creer_couleur(((rouge << 16) + (vert << 8) + bleu), rouge, vert, bleu);
 }
 
 

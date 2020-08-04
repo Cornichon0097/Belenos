@@ -4,18 +4,6 @@
 
 
 /*
- * La structure d'un maillon.
- * Un maillon se caractérise par l'information (composant et écran) qu'il contient.
- * Il permet aussi d'accéder au maillon suivant da la liste chaînée.
- */
-struct maillon
-{
-  Composant graphique;      /* Le composant. */
-  struct maillon * suivant; /* Le maillon suivant. */
-};
-
-
-/*
  * La structure d'une file.
  * La file est une liste chaînée composée de maillons. Seules les adresses du premier et
  * du dernier maillon de la file sont sauvegardées. Les autres maillons sont accessibles
@@ -133,6 +121,13 @@ int empty(File f) /* La file concernée. */
   {
     return 0;
   }
+}
+
+
+
+struct maillon * top(File f)
+{
+  return f->premier;
 }
 
 

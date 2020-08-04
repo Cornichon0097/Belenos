@@ -44,6 +44,8 @@ Window recuperer_ecran(const Fenetre f);
  */
 GC recuperer_contexte_graphique(const Fenetre f);
 
+void rafraichir(const Fenetre a_rafraichir);
+
 /*
  * Retourne si une fenêtre est ouverte.
  */

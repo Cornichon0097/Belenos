@@ -3,7 +3,7 @@
 
 #include "../include/couleur.h"
 #include "../include/fenetre.h"
-#include "../include/etiquette.h"
+#include "../include/rectangle.h"
 
 
 #define X_FENETRE 100
@@ -26,11 +26,12 @@ int main(void)
 
   afficher_fenetre(f);
 
-  ajouter(f, creer_etiquette(10, 10, "Ceci est une étiquette.", creer_couleur_rvb(0xff, 0, 0xff)));
+  ajouter(f, creer_rectangle(50, 50, 100, 100, creer_couleur_rvb(0xff, 0, 0xff)));
 
   while (est_ouverte(f))
   {
     /* printf("test\n"); */
+    rafraichir(f);
   }
 
   detruire_fenetre(f);
