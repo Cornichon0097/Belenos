@@ -32,17 +32,16 @@ Point creer_point(int x,           /* L'abscisse, en pixels. */
 /*
  * Dessine un point.
  */
-void dessiner_point(const Fenetre destination, /* La fenêtre destination. */
-                    const Point a_dessiner)    /* Le point à dessiner. */
+void dessiner_point(const Point a_dessiner) /* Le point à dessiner. */
 {
-  XSetForeground(recuperer_affichage(destination),
-                 recuperer_contexte_graphique(destination),
+  XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
+                 recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                  recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
   /* Dessine le point. */
-  XDrawPoint(recuperer_affichage(destination), recuperer_ecran(destination),
-             recuperer_contexte_graphique(destination),
+  XDrawPoint(recuperer_affichage(recuperer_fenetre(a_dessiner)), recuperer_ecran(recuperer_fenetre(a_dessiner)),
+             recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
              recuperer_x(a_dessiner), recuperer_y(a_dessiner));
-  XFlush(recuperer_affichage(destination));
+  XFlush(recuperer_affichage(recuperer_fenetre(a_dessiner)));
 }
 
 

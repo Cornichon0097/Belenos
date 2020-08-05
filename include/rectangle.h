@@ -19,7 +19,7 @@ Rectangle creer_rectangle(int x, int y, unsigned int largeur, unsigned int haute
 /*
  * Dessine un rectangle.
  */
-void dessiner_rectangle(const Fenetre destination, const Rectangle a_dessiner);
+void dessiner_rectangle(const Rectangle a_dessiner);
 
 /*
  * Détruit un rectangle.

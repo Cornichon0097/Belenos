@@ -20,7 +20,7 @@ Point creer_point(int x, int y, Couleur couleur);
 /*
  * Dessine un point.
  */
-void dessiner_point(const Fenetre destination, const Point a_dessiner);
+void dessiner_point(const Point a_dessiner);
 
 /*
  * Détruit un point.

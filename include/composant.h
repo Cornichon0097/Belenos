@@ -16,7 +16,7 @@ typedef struct composant* Composant;
 /*
  * La définition de la fonction de dessin pour un composant.
  */
-typedef void (*dessinateur)(const Fenetre, const Composant);
+typedef void (*dessinateur)(const Composant);
 
 /*
 * La définition du destructeur pour un composant.
@@ -44,13 +44,18 @@ Composant creer_composant(int x, int y, Couleur couleur);
 /*
  * Dessine un composant.
  */
-void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
+void dessiner_composant(const Composant a_dessiner);
 
 /*
  * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
  * qu'à une seule fenêtre.
  */
 void changer_fenetre(Fenetre f, Composant c);
+
+/*
+ * Retourne la fenêtre à laquelle appartient un composant.
+ */
+Fenetre recuperer_fenetre(const Composant c);
 
 /*
  * Modifie l'abscisse d'un composant.
@@ -83,7 +88,7 @@ void changer_couleur(Composant c, Couleur couleur);
 Couleur recuperer_couleur(const Composant c);
 
 /*
- * Modifie la nature d'un composant.
+* Modifie la nature d'un composant. La nature d'un composant est unique.
  */
 void changer_nature(Composant c, void * nature);
 

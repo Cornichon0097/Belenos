@@ -19,7 +19,7 @@ Etiquette creer_etiquette(int x, int y, char * texte, Couleur couleur);
 /*
  * Dessine une étiquette.
  */
-void dessiner_etiquette(const Fenetre destination, const Etiquette a_dessiner);
+void dessiner_etiquette(const Etiquette a_dessiner);
 
 /*
  * Détruit une étiquette.

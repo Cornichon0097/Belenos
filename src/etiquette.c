@@ -63,22 +63,22 @@ Etiquette creer_etiquette(int x,           /* L'abscisse, en pixels. */
 /*
  * Dessine une étiquette.
  */
-void dessiner_etiquette(const Fenetre destination,  /* La fenêtre destination. */
-                        const Etiquette a_dessiner) /* L'étiquette à dessiner. */
+void dessiner_etiquette(const Etiquette a_dessiner) /* L'étiquette à dessiner. */
 {
   /* Les propriétés du composant qui en font une étiquette : */
   struct etiquette * etiquette = (struct etiquette*) recuperer_nature(a_dessiner);
 
 
-  XSetForeground(recuperer_affichage(destination),
-                 recuperer_contexte_graphique(destination),
+  XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
+                 recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                  recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
   /* Dessine l'étiquette. */
-  XDrawString(recuperer_affichage(destination), recuperer_ecran(destination),
-              recuperer_contexte_graphique(destination),
+  XDrawString(recuperer_affichage(recuperer_fenetre(a_dessiner)),
+              recuperer_ecran(recuperer_fenetre(a_dessiner)),
+              recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
               recuperer_x(a_dessiner), recuperer_y(a_dessiner),
               etiquette->texte, (int) etiquette->longueur);
-  XFlush(recuperer_affichage(destination));
+  XFlush(recuperer_affichage(recuperer_fenetre(a_dessiner)));
 }
 
 

@@ -235,7 +235,7 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
   /* Tous les composants de la fenêtre sont redessinés. */
   while (m)
   {
-    action(m->graphique).dessiner(a_rafraichir, m->graphique);
+    action(m->graphique).dessiner(m->graphique);
     m = m->suivant;
   }
 }
@@ -290,11 +290,12 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
     return;
   }
 
+  /* Le composant a besoin de connaître la fenêtre à laquelle il appartient. */
   changer_fenetre(destination, a_ajouter);
   /* Le composant est ajouté à la file des composants graphiques. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */
-  action(a_ajouter).dessiner(destination, a_ajouter);
+  action(a_ajouter).dessiner(a_ajouter);
 }
 
 

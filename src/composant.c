@@ -11,9 +11,9 @@
  */
 struct composant
 {
-  Fenetre fenetre;       /* La fenêtre à laquelle il appartient. */
-  signed char x;         /* L'abscisse, en pixels. */
-  signed char y;         /* L'ordonnée, en pixels. */
+  Fenetre fenetre;       /* La fenêtre associée. */
+  short x;               /* L'abscisse, en pixels. */
+  short y;               /* L'ordonnée, en pixels. */
   Couleur couleur;       /* La couleur. */
   void * nature;         /* La nature. */
   struct vtable actions; /* Les actions disponibles. */
@@ -39,10 +39,11 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
   {
     /* Initialisation du composant. */
     nouveau->fenetre = NULL;
-    nouveau->x = (signed char) x;
-    nouveau->y = (signed char) y;
+    nouveau->x = (short) x;
+    nouveau->y = (short) y;
     nouveau->couleur = couleur;
-    nouveau->nature = NULL;
+    nouveau->nature  = NULL;
+    /* Initialisation de la vtable. */
     nouveau->actions.dessiner = &dessiner_composant;
     nouveau->actions.detruire = &detruire_composant;
   }
@@ -57,8 +58,7 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
 /*
  * Dessine un composant.
  */
-void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. */
-                        const Composant a_dessiner) /* Le composant à dessiner. */
+void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
 {
   /* Un simple composant ne peut pas être dessiné. */
   fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
@@ -72,9 +72,10 @@ void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. 
  */
 void changer_fenetre(Fenetre f, Composant c)
 {
-  /* Un composant ne peut appartenir qu'à une seule fenêtre. */
+  /* Le composant ne peut appartenir qu'à une seule fenêtre. */
   if (c->fenetre == NULL)
   {
+    /* Modifie la fenêtre à laquelle appartient le composant. */
     c->fenetre = f;
   }
   else
@@ -87,13 +88,24 @@ void changer_fenetre(Fenetre f, Composant c)
 
 
 /*
+ * Retourne la fenêtre à laquelle appartient un composant.
+ */
+Fenetre recuperer_fenetre(const Composant c)
+{
+  /* Retourne la fenêtre à laquelle appartient le composant. */
+  return c->fenetre;
+}
+
+
+
+/*
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, /* Le composant concerné. */
                int x)       /* La nouvelle abscisse. */
 {
   /* Modifie l'abscisse du composant. */
-  c->x = (signed char) x;
+  c->x = (short) x;
 
   /* Rafraîchit la fenêtre si nécessaire. */
   if (c->fenetre)
@@ -122,7 +134,7 @@ void changer_y(Composant c, /* Le composant concerné. */
                int y)       /* La nouvelle ordonnée. */
 {
   /* Modifie l'ordonnée du composant. */
-  c->y = (signed char) y;
+  c->y = (short) y;
 
   /* Rafraîchit la fenêtre si nécessaire. */
   if (c->fenetre)
@@ -176,13 +188,21 @@ Couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 
 
 /*
- * Modifie la nature d'un composant.
+ * Modifie la nature d'un composant. La nature d'un composant est unique.
  */
 void changer_nature(Composant c,   /* Le composant concerné. */
                     void * nature) /* La nouvelle nature. */
 {
-  /* Modifie la nature du composant. */
-  c->nature = nature;
+  /* La nature du composant est unique. */
+  if (c->nature == NULL)
+  {
+    /* Modifie la nature du composant. */
+    c->nature = nature;
+  }
+  else
+  {
+    fprintf(stderr, "changer_nature : la nature d'un composant est unique.\n");
+  }
 }
 
 
