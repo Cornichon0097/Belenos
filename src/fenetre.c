@@ -110,7 +110,9 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
      dédiée les événements liés à l'exposition de la fenêtre, à la pression d'une
      touche du clavier et aux cliques de la souris. */
   XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
-               ExposureMask | KeyPressMask | ButtonPressMask | StructureNotifyMask);
+               ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | StructureNotifyMask);
+
+  XAutoRepeatOff(nouvelle->affichage);
 
   /* Le contexte graphique de la fenêtre, indispensable pour dessiner. */
   nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
@@ -306,6 +308,7 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à détruire. */
 {
+  XAutoRepeatOn(a_detruire->affichage);
   /* Fermeture de l'affichage et de tout ce qui en dépend. */
   XCloseDisplay(a_detruire->affichage);
   /* La file des composants graphiques est détruite. */

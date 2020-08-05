@@ -7,6 +7,9 @@
 
 
 
-KeySym touche(const Fenetre f);
+KeySym touche_pressee(const Fenetre f);
+
+KeySym touche_relachee(const Fenetre f);
+
 
 #endif

@@ -32,11 +32,15 @@ int main(void)
 
   while (est_ouverte(f))
   {
-    if (touche(f) == XK_space)
+    if (touche_pressee(f) == XK_space)
     {
       changer_couleur(r, creer_couleur_rvb(0xff, 0xff, 0));
     }
-    /* printf("test\n"); */
+
+    if (touche_relachee(f) == XK_space)
+    {
+      changer_couleur(r, creer_couleur_rvb(0xff, 0, 0xff));
+    }
   }
 
   detruire_fenetre(f);
