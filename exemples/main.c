@@ -4,6 +4,7 @@
 #include "../include/couleur.h"
 #include "../include/fenetre.h"
 #include "../include/rectangle.h"
+#include "../include/evenement.h"
 
 
 #define X_FENETRE 100
@@ -29,10 +30,12 @@ int main(void)
 
   ajouter(f, r);
 
-  changer_couleur(r, creer_couleur_rvb(0xff, 0xff, 0));
-
   while (est_ouverte(f))
   {
+    if (touche(f) == XK_space)
+    {
+      changer_couleur(r, creer_couleur_rvb(0xff, 0xff, 0));
+    }
     /* printf("test\n"); */
   }
 

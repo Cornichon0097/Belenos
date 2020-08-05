@@ -18,7 +18,8 @@ OFILES = $(OBJECT)$(MAIN).o \
 				 $(OBJECT)couleur.o \
 				 $(OBJECT)point.o \
 				 $(OBJECT)rectangle.o \
-				 $(OBJECT)etiquette.o
+				 $(OBJECT)etiquette.o \
+				 $(OBJECT)evenement.o
 
 
 but: $(OBJECT) $(EXECUTABLE)
@@ -68,6 +69,11 @@ $(OBJECT)rectangle.o: $(SOURCE)rectangle.c \
 $(OBJECT)etiquette.o: $(SOURCE)etiquette.c \
 	                    $(INCLUDE)etiquette.h \
 									    $(INCLUDE)composant.h
+	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+
+$(OBJECT)evenement.o: $(SOURCE)evenement.c \
+	                    $(INCLUDE)evenement.h \
+											$(INCLUDE)fenetre.h
 	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
 

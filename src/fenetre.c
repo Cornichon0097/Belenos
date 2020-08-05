@@ -236,6 +236,7 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
   while (m)
   {
     action(m->graphique).dessiner(m->graphique);
+    /* Une fois le composant dessiné, on passe au suivant. */
     m = m->suivant;
   }
 }
