@@ -226,23 +226,17 @@ GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
 {
   struct maillon * m = top(a_rafraichir->composants); /* Le premier maillon. */
-  XEvent evenement;                                   /* L'événement lié à la fenêtre. */
 
 
-  /* Si un événement qui résulte d'une modification de la fenêtre est en attente,
-     alors il est récupéré et la fenêtre est rafraîchie. */
-  if (XCheckMaskEvent(a_rafraichir->affichage, StructureNotifyMask, &evenement))
+  /* Efface la fenêtre. */
+  XClearWindow(a_rafraichir->affichage,
+               a_rafraichir->ecrans[a_rafraichir->ecran_actif]);
+
+  /* Tous les composants de la fenêtre sont redessinés. */
+  while (m)
   {
-    /* Efface la fenêtre. */
-    XClearWindow(a_rafraichir->affichage,
-                 a_rafraichir->ecrans[a_rafraichir->ecran_actif]);
-
-    /* Tous les composants de la fenêtre sont redessinés. */
-    while (m)
-    {
-      action(m->graphique).dessiner(a_rafraichir, m->graphique);
-      m = m->suivant;
-    }
+    action(m->graphique).dessiner(a_rafraichir, m->graphique);
+    m = m->suivant;
   }
 }
 
@@ -267,6 +261,13 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
     }
   }
 
+  /* Si un événement qui résulte d'une modification de la fenêtre est en attente,
+     alors il est récupéré et la fenêtre est rafraîchie. */
+  if (XCheckMaskEvent(f->affichage, StructureNotifyMask, &evenement))
+  {
+    rafraichir(f);
+  }
+
 
   /* Si les deux conditions précédentes ne sont pas remplies,
      alors la fenêtre est toujours ouverte. */
@@ -289,6 +290,7 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
     return;
   }
 
+  changer_fenetre(destination, a_ajouter);
   /* Le composant est ajouté à la file des composants graphiques. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */

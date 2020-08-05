@@ -16,6 +16,7 @@
 int main(void)
 {
   Fenetre f = creer_fenetre(X_FENETRE, Y_FENETRE, LARGEUR_FENETRE, HAUTEUR_FENETRE);
+  Rectangle r =  creer_rectangle(50, 50, 100, 100, creer_couleur_rvb(0xff, 0, 0xff), 1);
 
 
   if (f == NULL)
@@ -26,12 +27,13 @@ int main(void)
 
   afficher_fenetre(f);
 
-  ajouter(f, creer_rectangle(50, 50, 100, 100, creer_couleur_rvb(0xff, 0, 0xff), 1));
+  ajouter(f, r);
+
+  changer_couleur(r, creer_couleur_rvb(0xff, 0xff, 0));
 
   while (est_ouverte(f))
   {
     /* printf("test\n"); */
-    rafraichir(f);
   }
 
   detruire_fenetre(f);

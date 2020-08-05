@@ -47,6 +47,12 @@ Composant creer_composant(int x, int y, Couleur couleur);
 void dessiner_composant(const Fenetre destination, const Composant a_dessiner);
 
 /*
+ * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
+ * qu'à une seule fenêtre.
+ */
+void changer_fenetre(Fenetre f, Composant c);
+
+/*
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, int x);

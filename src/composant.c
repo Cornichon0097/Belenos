@@ -11,6 +11,7 @@
  */
 struct composant
 {
+  Fenetre fenetre;       /* La fenêtre à laquelle il appartient. */
   signed char x;         /* L'abscisse, en pixels. */
   signed char y;         /* L'ordonnée, en pixels. */
   Couleur couleur;       /* La couleur. */
@@ -37,6 +38,7 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
   if (nouveau)
   {
     /* Initialisation du composant. */
+    nouveau->fenetre = NULL;
     nouveau->x = (signed char) x;
     nouveau->y = (signed char) y;
     nouveau->couleur = couleur;
@@ -65,6 +67,26 @@ void dessiner_composant(const Fenetre destination,  /* La fenêtre destination. 
 
 
 /*
+ * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
+ * qu'à une seule fenêtre.
+ */
+void changer_fenetre(Fenetre f, Composant c)
+{
+  /* Un composant ne peut appartenir qu'à une seule fenêtre. */
+  if (c->fenetre == NULL)
+  {
+    c->fenetre = f;
+  }
+  else
+  {
+    fprintf(stderr, "changer_fenetre : un composant ne peut ");
+    fprintf(stderr, "appartenir qu'à une seule fenêtre.\n");
+  }
+}
+
+
+
+/*
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, /* Le composant concerné. */
@@ -72,6 +94,12 @@ void changer_x(Composant c, /* Le composant concerné. */
 {
   /* Modifie l'abscisse du composant. */
   c->x = (signed char) x;
+
+  /* Rafraîchit la fenêtre si nécessaire. */
+  if (c->fenetre)
+  {
+    rafraichir(c->fenetre);
+  }
 }
 
 
@@ -95,6 +123,12 @@ void changer_y(Composant c, /* Le composant concerné. */
 {
   /* Modifie l'ordonnée du composant. */
   c->y = (signed char) y;
+
+  /* Rafraîchit la fenêtre si nécessaire. */
+  if (c->fenetre)
+  {
+    rafraichir(c->fenetre);
+  }
 }
 
 
@@ -116,8 +150,16 @@ int recuperer_y(const Composant c) /* Le composant concerné. */
 void changer_couleur(Composant c,     /* Le composant concerné. */
                      Couleur couleur) /* La nouvelle couleur. */
 {
+  /* Détruit la couleur actuelle. */
+  detruire_couleur(c->couleur);
   /* Modifie la couleur du composant. */
   c->couleur = couleur;
+
+  /* Rafraîchit la fenêtre si nécessaire. */
+  if (c->fenetre)
+  {
+    rafraichir(c->fenetre);
+  }
 }
 
 
