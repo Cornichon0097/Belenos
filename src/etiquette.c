@@ -23,7 +23,7 @@ struct etiquette
 Etiquette creer_etiquette(int x,           /* L'abscisse, en pixels. */
                           int y,           /* L'ordonnée, en pixels. */
                           char * texte,    /* La chaîne de caractères. */
-                          Couleur couleur) /* La couleur. */
+                          couleur couleur) /* La couleur. */
 {
   /* La nouvelle étiquette : */
   Etiquette nouvelle = creer_composant(x, y, couleur);
@@ -71,7 +71,7 @@ void dessiner_etiquette(const Etiquette a_dessiner) /* L'étiquette à dessiner.
 
   XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
                  recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
-                 recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
+                 recuperer_couleur(a_dessiner));
   /* Dessine l'étiquette. */
   XDrawString(recuperer_affichage(recuperer_fenetre(a_dessiner)),
               recuperer_ecran(recuperer_fenetre(a_dessiner)),

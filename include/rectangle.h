@@ -14,7 +14,7 @@ typedef struct composant* Rectangle;
 /*
  * Crée un nouveau rectangle.
  */
-Rectangle creer_rectangle(int x, int y, unsigned int largeur, unsigned int hauteur, Couleur couleur, int rempli);
+Rectangle creer_rectangle(int x, int y, unsigned int largeur, unsigned int hauteur, couleur couleur, int rempli);
 
 /*
  * Dessine un rectangle.

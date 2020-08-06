@@ -110,13 +110,29 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
      dédiée les événements liés à l'exposition de la fenêtre, à la pression d'une
      touche du clavier et aux cliques de la souris. */
   XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
-               ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | StructureNotifyMask);
+               ExposureMask            /* Exposition de la fenêtre. */
+               | KeyPressMask          /* Touche de clavier pressée. */
+               | KeyReleaseMask        /* Touche de clavier relâchée. */
+               | ButtonPressMask       /* Bouton de souris pressé. */
+               | ButtonReleaseMask     /* Bouton de souris relâché. */
+               | StructureNotifyMask); /* Changement de structure de la fenêtre. */
 
-  XAutoRepeatOff(nouvelle->affichage);
+  /* L'écran actif par défaut. */
+  nouvelle->ecran_actif = 0U;
+
+  /* Modification des attributs de la fenêtre pour un affichage permanent. */
+  nouvelle->attributs.backing_store = Always;
+  XChangeWindowAttributes(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif],
+                          CWBackingStore, &(nouvelle->attributs));
 
   /* Le contexte graphique de la fenêtre, indispensable pour dessiner. */
   nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
                                             nouvelle->ecran_par_defaut);
+
+  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
+  nouvelle->fermeture = XInternAtom(nouvelle->affichage, "WM_DELETE_WINDOW", 0);
+  XSetWMProtocols(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif],
+                  &(nouvelle->fermeture), 1);
 
   /* La file des composants graphiques. Tous les composants graphiques ajoutés à la
      à la fenêtre y seront répertoriés, afin de pouvoir libérer la mémoire qui leur
@@ -124,45 +140,11 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   nouvelle->composants = creer_file();
 
   /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
+  /* XAutoRepeatOff(nouvelle->affichage); */
 
 
   /* Retourne la nouvelle fenêtre. */
   return nouvelle;
-}
-
-
-
-/*
- * Affiche une fenêtre à l'écran.
- */
-void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
-{
-  XEvent evenement; /* L'événement lié à la fenêtre. */
-
-
-  /* L'écran actif par défaut. */
-  a_afficher->ecran_actif = 0U;
-
-  /* Modification des attributs de la fenêtre pour un affichage permanent. */
-  a_afficher->attributs.backing_store = Always;
-  XChangeWindowAttributes(a_afficher->affichage,
-                          a_afficher->ecrans[a_afficher->ecran_actif],
-                          CWBackingStore, &(a_afficher->attributs));
-
-  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
-  a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", 0);
-  XSetWMProtocols(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif],
-                  &(a_afficher->fermeture), 1);
-
-  /* Une fois les paramètres définis, la fenêtre peut être affichée à l'écran. */
-  XMapWindow(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif]);
-
-  do
-  {
-    /* En attente d'un événement d'exposition de la fenêtre. */
-    XNextEvent(a_afficher->affichage, &evenement);
-  }
-  while (evenement.type != Expose);
 }
 
 
@@ -206,7 +188,7 @@ void changer_ecran(Fenetre f,       /* La fenêtre concernée. */
 Window recuperer_ecran(const Fenetre f) /* La fenêtre concernée. */
 {
   /* Retourne l'écran actif de la fenêtre. */
-  return f->ecrans[f->ecran_actif];
+  return f->ecrans[0];
 }
 
 
@@ -281,7 +263,7 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à détruire. */
 {
-  XAutoRepeatOn(a_detruire->affichage);
+  /* XAutoRepeatOn(a_detruire->affichage); */
   /* Fermeture de l'affichage et de tout ce qui en dépend. */
   XCloseDisplay(a_detruire->affichage);
   /* La file des composants graphiques est détruite. */

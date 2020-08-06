@@ -5,6 +5,27 @@
 
 
 /*
+ * Affiche une fenêtre à l'écran.
+ */
+void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
+{
+  XEvent evenement; /* L'événement lié à la fenêtre. */
+
+
+  /* Une fois les paramètres définis, la fenêtre peut être affichée à l'écran. */
+  XMapWindow(recuperer_affichage(a_afficher), recuperer_ecran(a_afficher));
+
+  do
+  {
+    /* En attente d'un événement d'exposition de la fenêtre. */
+    XNextEvent(recuperer_affichage(a_afficher), &evenement);
+  }
+  while (evenement.type != Expose);
+}
+
+
+
+/*
  * Retourne si une fenêtre est ouverte.
  */
 int est_ouverte(const Fenetre f) /* La fenêtre concernée. */

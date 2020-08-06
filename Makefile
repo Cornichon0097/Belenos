@@ -15,7 +15,6 @@ OFILES = $(OBJECT)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o \
-				 $(OBJECT)couleur.o \
 				 $(OBJECT)point.o \
 				 $(OBJECT)rectangle.o \
 				 $(OBJECT)etiquette.o \
@@ -50,10 +49,6 @@ $(OBJECT)composant.o: $(SOURCE)composant.c \
 	                    $(INCLUDE)composant.h \
 											$(INCLUDE)couleur.h \
 											$(INCLUDE)fenetre.h
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(OBJECT)couleur.o: $(SOURCE)couleur.c \
-	                  $(INCLUDE)couleur.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)point.o: $(SOURCE)point.c \

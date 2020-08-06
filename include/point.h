@@ -15,7 +15,7 @@ typedef struct composant* Point;
 /*
  * Crée un nouveau point.
  */
-Point creer_point(int x, int y, Couleur couleur);
+Point creer_point(int x, int y, couleur couleur);
 
 /*
  * Dessine un point.

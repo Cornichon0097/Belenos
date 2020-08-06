@@ -23,7 +23,7 @@ Rectangle creer_rectangle(int x,                /* L'abscisse, en pixels. */
                           int y,                /* L'ordonnée, en pixels. */
                           unsigned int largeur, /* La largeur, en pixels. */
                           unsigned int hauteur, /* La hauteur, en pixels. */
-                          Couleur couleur,      /* La couleur. */
+                          couleur couleur,      /* La couleur. */
                           int rempli)           /* Si le rectangle est rempli. */
 {
   /* Le nouveau rectangle : */
@@ -73,7 +73,7 @@ void dessiner_rectangle(const Rectangle a_dessiner) /* Le rectangle à dessiner.
 
   XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
                  recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
-                 recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
+                 recuperer_couleur(a_dessiner));
 
   /* Choisit la fonction adaptée pour dessiner le rectangle. */
   if (rectangle->rempli)

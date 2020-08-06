@@ -14,7 +14,7 @@ struct composant
   Fenetre fenetre;       /* La fenêtre associée. */
   short x;               /* L'abscisse, en pixels. */
   short y;               /* L'ordonnée, en pixels. */
-  Couleur couleur;       /* La couleur. */
+  couleur couleur;       /* La couleur. */
   void * nature;         /* La nature. */
   struct vtable actions; /* Les actions disponibles. */
 };
@@ -26,7 +26,7 @@ struct composant
  */
 Composant creer_composant(int x,           /* L'abscisse, en pixels. */
                           int y,           /* L'ordonnée, en pixels. */
-                          Couleur couleur) /* La couleur. */
+                          couleur couleur) /* La couleur. */
 {
   Composant nouveau; /* Le nouveau composant. */
 
@@ -160,10 +160,8 @@ int recuperer_y(const Composant c) /* Le composant concerné. */
  * Modifie la couleur d'un composant.
  */
 void changer_couleur(Composant c,     /* Le composant concerné. */
-                     Couleur couleur) /* La nouvelle couleur. */
+                     couleur couleur) /* La nouvelle couleur. */
 {
-  /* Détruit la couleur actuelle. */
-  detruire_couleur(c->couleur);
   /* Modifie la couleur du composant. */
   c->couleur = couleur;
 
@@ -179,7 +177,7 @@ void changer_couleur(Composant c,     /* Le composant concerné. */
 /*
  * Retourne la couleur d'un composant.
  */
-Couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
+couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 {
   /* Retourne la couleur du composant. */
   return c->couleur;
@@ -258,8 +256,6 @@ struct vtable action(const Composant c) /* Le composant concerné. */
  */
 void detruire_composant(Composant a_detruire) /* Le composant à détruire. */
 {
-  /* La couleur attribuée au composant est détruite. */
-  detruire_couleur(a_detruire->couleur);
   /* La mémoire dédiée au composant est libérée. */
   free(a_detruire);
 }

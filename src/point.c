@@ -9,7 +9,7 @@
  */
 Point creer_point(int x,           /* L'abscisse, en pixels. */
                   int y,           /* L'ordonnée, en pixels. */
-                  Couleur couleur) /* La couleur. */
+                  couleur couleur) /* La couleur. */
 {
   Point nouveau = creer_composant(x, y, couleur); /* Le nouveau point. */
 
@@ -36,7 +36,7 @@ void dessiner_point(const Point a_dessiner) /* Le point à dessiner. */
 {
   XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
                  recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
-                 recuperer_couleur_hex(recuperer_couleur(a_dessiner)));
+                 recuperer_couleur(a_dessiner));
   /* Dessine le point. */
   XDrawPoint(recuperer_affichage(recuperer_fenetre(a_dessiner)), recuperer_ecran(recuperer_fenetre(a_dessiner)),
              recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
