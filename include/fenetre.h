@@ -44,12 +44,9 @@ Window recuperer_ecran(const Fenetre f);
  */
 GC recuperer_contexte_graphique(const Fenetre f);
 
-void rafraichir(const Fenetre a_rafraichir);
+Atom fermeture(const Fenetre f);
 
-/*
- * Retourne si une fenêtre est ouverte.
- */
-int est_ouverte(const Fenetre f);
+void rafraichir(const Fenetre a_rafraichir);
 
 /*
  * Ajoute un composant à une fenêtre. Cette action a pour effet de dessiner le composant

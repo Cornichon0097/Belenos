@@ -222,6 +222,13 @@ GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 
 
 
+Atom fermeture(const Fenetre f)
+{
+  return f->fermeture;
+}
+
+
+
 /*
  * Rafraîchit une fenêtre.
  */
@@ -241,40 +248,6 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
     /* Une fois le composant dessiné, on passe au suivant. */
     m = m->suivant;
   }
-}
-
-
-
-/*
- * Retourne si une fenêtre est ouverte.
- */
-int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
-{
-  XEvent evenement; /* L'événement lié à la fenêtre. */
-
-
-  /* Si un événement du même type que celui de la fermeture de la fenêtre est en attente,
-     alors il est récupéré afin de pouvoir en connaître la nature. */
-  if (XCheckTypedEvent(f->affichage, ClientMessage, &evenement))
-  {
-    /* Vérifie si l'événement correspond à la fermeture de la fenêtre. */
-    if ((Atom) evenement.xclient.data.l[0] == f->fermeture)
-    {
-      return 0;
-    }
-  }
-
-  /* Si un événement qui résulte d'une modification de la fenêtre est en attente,
-     alors il est récupéré et la fenêtre est rafraîchie. */
-  if (XCheckMaskEvent(f->affichage, StructureNotifyMask, &evenement))
-  {
-    rafraichir(f);
-  }
-
-
-  /* Si les deux conditions précédentes ne sont pas remplies,
-     alors la fenêtre est toujours ouverte. */
-  return 1;
 }
 
 
