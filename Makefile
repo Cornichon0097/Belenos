@@ -32,7 +32,8 @@ $(EXECUTABLE): $(OFILES)
 $(OBJECT)main.o: $(EXEMPLE)main.c \
 	               $(INCLUDE)fenetre.h \
 							   $(INCLUDE)couleur.h \
-								 $(INCLUDE)etiquette.h
+								 $(INCLUDE)point.h \
+								 $(INCLUDE)evenement.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \

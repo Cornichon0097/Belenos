@@ -140,7 +140,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   nouvelle->composants = creer_file();
 
   /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
-  /* XAutoRepeatOff(nouvelle->affichage); */
+  XAutoRepeatOff(nouvelle->affichage);
 
 
   /* Retourne la nouvelle fenêtre. */
@@ -258,12 +258,24 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
 
 
 
+void position_souris(const Fenetre f, int * x, int * y)
+{
+  Window w, i;
+  unsigned int mask;
+  int root_x, root_y;
+
+
+  XQueryPointer(f->affichage, f->ecrans[0], &w, &i, &root_x, &root_y, x, y, &mask);
+}
+
+
+
 /*
  * Détruit une fenêtre.
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à détruire. */
 {
-  /* XAutoRepeatOn(a_detruire->affichage); */
+  XAutoRepeatOn(a_detruire->affichage);
   /* Fermeture de l'affichage et de tout ce qui en dépend. */
   XCloseDisplay(a_detruire->affichage);
   /* La file des composants graphiques est détruite. */

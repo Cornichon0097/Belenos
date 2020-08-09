@@ -49,6 +49,8 @@ void rafraichir(const Fenetre a_rafraichir);
  */
 void ajouter(const Fenetre f, Composant a_ajouter); /* ! Pas adaptée aux écrans ! */
 
+void position_souris(const Fenetre f, int * x, int * y);
+
 /*
  * Détruit une fenêtre.
  */

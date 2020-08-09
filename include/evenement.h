@@ -18,5 +18,9 @@ KeySym touche_pressee(const Fenetre f);
 
 KeySym touche_relachee(const Fenetre f);
 
+unsigned int bouton_presse(const Fenetre f);
+
+unsigned int bouton_relache(const Fenetre f);
+
 
 #endif

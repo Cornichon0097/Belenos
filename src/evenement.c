@@ -46,10 +46,10 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
 
   /* Si un événement qui résulte d'une modification de la fenêtre est en attente,
      alors il est récupéré et la fenêtre est rafraîchie. */
-  if (XCheckMaskEvent(recuperer_affichage(f), StructureNotifyMask, &evenement))
+  /* if (XCheckMaskEvent(recuperer_affichage(f), StructureNotifyMask, &evenement))
   {
     rafraichir(f);
-  }
+  } */
 
 
   /* Si les deux conditions précédentes ne sont pas remplies,
@@ -88,5 +88,39 @@ KeySym touche_relachee(const Fenetre f)
   else
   {
     return XK_VoidSymbol;
+  }
+}
+
+
+
+unsigned int bouton_presse(const Fenetre f)
+{
+  XEvent evenement;
+
+
+  if (XCheckMaskEvent(recuperer_affichage(f), ButtonPressMask, &evenement))
+  {
+    return evenement.xbutton.button;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+
+
+unsigned int bouton_relache(const Fenetre f)
+{
+  XEvent evenement;
+
+
+  if (XCheckMaskEvent(recuperer_affichage(f), ButtonReleaseMask, &evenement))
+  {
+    return evenement.xbutton.button;
+  }
+  else
+  {
+    return 0;
   }
 }

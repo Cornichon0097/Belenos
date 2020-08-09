@@ -3,7 +3,7 @@
 
 #include "../include/couleur.h"
 #include "../include/fenetre.h"
-#include "../include/rectangle.h"
+#include "../include/point.h"
 #include "../include/evenement.h"
 
 
@@ -17,7 +17,7 @@
 int main(void)
 {
   Fenetre f = creer_fenetre(X_FENETRE, Y_FENETRE, LARGEUR_FENETRE, HAUTEUR_FENETRE);
-  Rectangle r =  creer_rectangle(50, 50, 100, 100, NOIR, 1);
+  int x, y;
 
 
   if (f == NULL)
@@ -28,18 +28,15 @@ int main(void)
 
   afficher_fenetre(f);
 
-  ajouter(f, r);
-
   while (est_ouverte(f))
   {
-    if (touche_pressee(f) == XK_space)
+    if (bouton_presse(f) == 1)
     {
-      changer_couleur(r, 0xff);
-    }
-
-    if (touche_relachee(f) == XK_space)
-    {
-      changer_couleur(r, NOIR);
+      while (bouton_relache(f) != 1)
+      {
+        position_souris(f, &x, &y);
+        ajouter(f, creer_point(x, y, NOIR));        
+      }
     }
   }
 
