@@ -20,6 +20,11 @@ typedef struct fenetre* Fenetre;
 Fenetre creer_fenetre(int x, int y, int largeur, int hauteur);
 
 /*
+ * Affiche une fenêtre à l'écran.
+ */
+void afficher_fenetre(Fenetre f);
+
+/*
  * Retourne l'affichage d'une fenêtre.
  */
 Display * recuperer_affichage(const Fenetre f);

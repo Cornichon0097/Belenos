@@ -8,7 +8,7 @@ INCLUDE = ./include/
 SOURCE = ./src/
 OBJECT = ./obj/
 
-MAIN = main
+MAIN = test
 EXECUTABLE = executable.out
 
 OFILES = $(OBJECT)$(MAIN).o \
@@ -29,7 +29,7 @@ $(OBJECT):
 $(EXECUTABLE): $(OFILES)
 	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
 
-$(OBJECT)main.o: $(EXEMPLE)main.c \
+$(OBJECT)test.o: $(EXEMPLE)test.c \
 	               $(INCLUDE)fenetre.h \
 							   $(INCLUDE)couleur.h \
 								 $(INCLUDE)point.h \

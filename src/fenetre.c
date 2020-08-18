@@ -1,11 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <X11/Xutil.h>
+
 #include "../include/fenetre.h"
 #include "../include/file.h"
 
 #define NOMBRE_ECRANS 5  /* Le nombre d'écrans disponibles pour dessiner. */
 #define BORDURE       1U /* La taille des bordures de la fenêtre. */
+#define VISIBLE       0
 
 
 /*
@@ -40,6 +43,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                       int hauteur) /* La hauteur, en pixels. */
 {
   Fenetre nouvelle; /* La nouvelle fenêtre. */
+  XSizeHints * proprietes;
   int i;            /* Variable itérative. */
 
 
@@ -79,6 +83,26 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                                             XWhitePixel(nouvelle->affichage,
                                                         nouvelle->ecran_par_defaut));
 
+  /* La position demadée pour la nouvelle fenêtre peut ne pas être prise en compte lors
+     de sa création. Il faut donc essayé de régler le problème. */
+  proprietes = XAllocSizeHints();
+
+  if (proprietes)
+  {
+    proprietes->flags  = PPosition;
+    proprietes->x      = x;
+    proprietes->y      = y;
+
+    /* Application des proprietés souhaitées à la fenêtre. */
+    XSetWNNormalHints(nouvelle->affichage, nouvelle->ecrans[0], proprietes);
+    XFree(proprietes);
+  }
+  else
+  {
+    fprintf(stderr, "creer_fenetre : impossible de placer la fenêtre ");
+    fprintf(stderr, "aux coordonnées demadées.\n");
+  }
+
   /* Vérifie que la fenêtre a bien été créée. */
   if (nouvelle->ecrans[0] == 0)
   {
@@ -117,22 +141,9 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                | ButtonReleaseMask     /* Bouton de souris relâché. */
                | StructureNotifyMask); /* Changement de structure de la fenêtre. */
 
-  /* L'écran actif par défaut. */
-  nouvelle->ecran_actif = 0U;
-
-  /* Modification des attributs de la fenêtre pour un affichage permanent. */
-  nouvelle->attributs.backing_store = Always;
-  XChangeWindowAttributes(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif],
-                          CWBackingStore, &(nouvelle->attributs));
-
   /* Le contexte graphique de la fenêtre, indispensable pour dessiner. */
   nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
                                             nouvelle->ecran_par_defaut);
-
-  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
-  nouvelle->fermeture = XInternAtom(nouvelle->affichage, "WM_DELETE_WINDOW", 0);
-  XSetWMProtocols(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif],
-                  &(nouvelle->fermeture), 1);
 
   /* La file des composants graphiques. Tous les composants graphiques ajoutés à la
      à la fenêtre y seront répertoriés, afin de pouvoir libérer la mémoire qui leur
@@ -140,11 +151,45 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   nouvelle->composants = creer_file();
 
   /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
-  XAutoRepeatOff(nouvelle->affichage);
+  /* XAutoRepeatOff(nouvelle->affichage); */
 
 
   /* Retourne la nouvelle fenêtre. */
   return nouvelle;
+}
+
+
+
+/*
+ * Affiche une fenêtre à l'écran.
+ */
+void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
+{
+  XEvent evenement; /* L'événement lié à la fenêtre. */
+
+
+  a_afficher->ecran_actif = 0U;
+
+  /* Modification des attributs de la fenêtre pour un affichage permanent. */
+  a_afficher->attributs.backing_store = Always;
+  XChangeWindowAttributes(a_afficher->affichage,
+                          a_afficher->ecrans[a_afficher->ecran_actif],
+                          CWBackingStore, &(a_afficher->attributs));
+
+  /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
+  a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", 0);
+  XSetWMProtocols(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif],
+                  &(a_afficher->fermeture), 1);
+
+  /* Une fois les paramètres définis, la fenêtre peut être affichée à l'écran. */
+  XMapWindow(recuperer_affichage(a_afficher), recuperer_ecran(a_afficher));
+
+  do
+  {
+    /* En attente d'un événement d'exposition de la fenêtre. */
+    XNextEvent(recuperer_affichage(a_afficher), &evenement);
+  }
+  while (evenement.type != Expose);
 }
 
 
@@ -275,7 +320,7 @@ void position_souris(const Fenetre f, int * x, int * y)
  */
 void detruire_fenetre(Fenetre a_detruire) /* La fenêtre à détruire. */
 {
-  XAutoRepeatOn(a_detruire->affichage);
+  /* XAutoRepeatOn(a_detruire->affichage); */
   /* Fermeture de l'affichage et de tout ce qui en dépend. */
   XCloseDisplay(a_detruire->affichage);
   /* La file des composants graphiques est détruite. */
