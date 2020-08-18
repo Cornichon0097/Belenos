@@ -9,7 +9,7 @@
 
 #define X_FENETRE 100
 #define Y_FENETRE 50
-#define LARGEUR_FENETRE 1000
+#define LARGEUR_FENETRE 500
 #define HAUTEUR_FENETRE 500
 
 

@@ -94,7 +94,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
     proprietes->y      = y;
 
     /* Application des proprietés souhaitées à la fenêtre. */
-    XSetWNNormalHints(nouvelle->affichage, nouvelle->ecrans[0], proprietes);
+    XSetWMNormalHints(nouvelle->affichage, nouvelle->ecrans[0], proprietes);
     XFree(proprietes);
   }
   else
