@@ -35,7 +35,7 @@ int main(void)
       while (bouton_relache(f) != 1)
       {
         position_souris(f, &x, &y);
-        ajouter(f, creer_point(x, y, NOIR));        
+        ajouter(f, creer_point(x, y, NOIR));
       }
     }
   }
