@@ -8,7 +8,7 @@ INCLUDE = ./include/
 SOURCE = ./src/
 OBJECT = ./obj/
 
-MAIN = test
+MAIN = main_rectangle
 EXECUTABLE = executable.out
 
 OFILES = $(OBJECT)$(MAIN).o \
@@ -29,11 +29,11 @@ $(OBJECT):
 $(EXECUTABLE): $(OFILES)
 	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
 
-$(OBJECT)test.o: $(EXEMPLE)test.c \
-	               $(INCLUDE)fenetre.h \
-							   $(INCLUDE)couleur.h \
-								 $(INCLUDE)point.h \
-								 $(INCLUDE)evenement.h
+$(OBJECT)main_rectangle.o: $(EXEMPLE)main_rectangle.c \
+	                         $(INCLUDE)fenetre.h \
+							             $(INCLUDE)couleur.h \
+								           $(INCLUDE)rectangle.h \
+								           $(INCLUDE)evenement.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
