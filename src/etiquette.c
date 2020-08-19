@@ -97,6 +97,27 @@ void changer_texte(Etiquette e,  /* L'étiquette concernée. */
   /* Modifie le texte de l'étiquette. */
   etiquette->texte = texte;
   etiquette->longueur = strlen(texte);
+
+  /* Rafraîchit la fenêtre si nécessaire. */
+  if (recuperer_fenetre(e))
+  {
+    rafraichir(recuperer_fenetre(e));
+  }
+}
+
+
+
+/*
+ * Retourne le texte d'une étiquette.
+ */
+char * recuperer_texte(const Etiquette e) /* L'étiquette concernée. */
+{
+  /* Les propriétés du composant qui en font une étiquette : */
+  struct etiquette * etiquette = (struct etiquette*) recuperer_nature(e);
+
+
+  /* Retourne le texte de l'étiquette. */
+  return etiquette->texte;
 }
 
 
@@ -107,6 +128,6 @@ void changer_texte(Etiquette e,  /* L'étiquette concernée. */
 void detruire_etiquette(Etiquette a_detruire) /* L'étiquette à détruire. */
 {
   /* La mémoire dédiée à l'étiquette est libérée. */
-  free((struct etiquette*) recuperer_nature(a_detruire));
+  free(recuperer_nature(a_detruire));
   detruire_composant(a_detruire);
 }

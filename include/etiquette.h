@@ -27,6 +27,11 @@ void dessiner_etiquette(const Etiquette a_dessiner);
 void changer_texte(Etiquette e, char * texte);
 
 /*
+ * Retourne le texte d'une étiquette.
+ */
+char * recuperer_texte(const Etiquette e);
+
+/*
  * Détruit une étiquette.
  */
 void detruire_etiquette(Etiquette a_detruire);
