@@ -42,10 +42,14 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
     nouveau->x = (short) x;
     nouveau->y = (short) y;
     nouveau->couleur = couleur;
-    nouveau->nature  = NULL;
+    nouveau->nature = NULL;
     /* Initialisation de la vtable. */
     nouveau->actions.dessiner = &dessiner_composant;
     nouveau->actions.detruire = &detruire_composant;
+  }
+  else
+  {
+    fprintf(stderr, "creer_composant : impossible d'allouer une mémoire suffisante.\n");
   }
 
 
@@ -70,7 +74,8 @@ void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner.
  * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
  * qu'à une seule fenêtre.
  */
-void changer_fenetre(Fenetre f, Composant c)
+void changer_fenetre(Fenetre f,   /* La nouvelle fenêtre. */
+                     Composant c) /* Le composant concerné. */
 {
   /* Le composant ne peut appartenir qu'à une seule fenêtre. */
   if (c->fenetre == NULL)
@@ -90,7 +95,7 @@ void changer_fenetre(Fenetre f, Composant c)
 /*
  * Retourne la fenêtre à laquelle appartient un composant.
  */
-Fenetre recuperer_fenetre(const Composant c)
+Fenetre recuperer_fenetre(const Composant c) /* Le composant concerné. */
 {
   /* Retourne la fenêtre à laquelle appartient le composant. */
   return c->fenetre;

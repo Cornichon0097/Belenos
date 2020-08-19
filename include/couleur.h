@@ -1,6 +1,13 @@
 #ifndef COULEUR_H
 #define COULEUR_H
 
+
+/*
+ * La structure d'une couleur.
+ */
+typedef unsigned long int couleur;
+
+
 /* Les couleurs primaires. */
 #define ROUGE   0xff0000
 #define VERT    0x00ff00
@@ -15,12 +22,6 @@
 #define NOIR    0x0
 #define BLANC   0xffffff
 #define GRIS    0x606060
-
-
-/*
- * La structure d'une couleur.
- */
-typedef unsigned long int couleur;
 
 
 #endif

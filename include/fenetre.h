@@ -44,8 +44,14 @@ Window recuperer_ecran(const Fenetre f);
  */
 GC recuperer_contexte_graphique(const Fenetre f);
 
+/*
+ * Retourne le mode de fermeture d'une fenêtre.
+ */
 Atom fermeture(const Fenetre f);
 
+/*
+ * Rafraîchit une fenêtre.
+ */
 void rafraichir(const Fenetre a_rafraichir);
 
 /*
@@ -54,6 +60,9 @@ void rafraichir(const Fenetre a_rafraichir);
  */
 void ajouter(const Fenetre f, Composant a_ajouter); /* ! Pas adaptée aux écrans ! */
 
+/*
+ * Récupère la position de la souris dans la fenêtre.
+ */
 void position_souris(const Fenetre f, int * x, int * y);
 
 /*

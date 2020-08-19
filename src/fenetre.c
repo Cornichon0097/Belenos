@@ -8,7 +8,6 @@
 
 #define NOMBRE_ECRANS 5  /* Le nombre d'écrans disponibles pour dessiner. */
 #define BORDURE       1U /* La taille des bordures de la fenêtre. */
-#define VISIBLE       0
 
 
 /*
@@ -22,14 +21,13 @@
  */
 struct fenetre
 {
-  Display * affichage;            /* L'affichage, structure principale de Xlib. */
-  int ecran_par_defaut;           /* L'écran par défaut. */
-  Window ecrans[NOMBRE_ECRANS];   /* Les écrans pour dessiner. */
-  unsigned char ecran_actif;      /* L'écran actif. */
-  XSetWindowAttributes attributs; /* Les attributs. */
-  GC contexte_graphique;          /* Le contexte graphique. */
-  Atom fermeture;                 /* L'action de fermeture. */
-  File composants;                /* La file des composants graphiques. */
+  Display * affichage;          /* L'affichage, structure principale de Xlib. */
+  int ecran_par_defaut;         /* L'écran par défaut. */
+  Window ecrans[NOMBRE_ECRANS]; /* Les écrans pour dessiner. */
+  unsigned char ecran_actif;    /* L'écran actif. */
+  GC contexte_graphique;        /* Le contexte graphique. */
+  Atom fermeture;               /* L'action de fermeture. */
+  File composants;              /* La file des composants graphiques. */
 };
 
 
@@ -42,9 +40,9 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                       int largeur, /* La largeur, en pixels. */
                       int hauteur) /* La hauteur, en pixels. */
 {
-  Fenetre nouvelle; /* La nouvelle fenêtre. */
-  XSizeHints * proprietes;
-  int i;            /* Variable itérative. */
+  Fenetre nouvelle;   /* La nouvelle fenêtre. */
+  XSizeHints * proprietes; /* Les proprietés de la fenêtre. */
+  int i;          /* Variable itérative. */
 
 
   /* Allocation d'un espace mémoire pour le composant. */
@@ -90,8 +88,8 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   if (proprietes)
   {
     proprietes->flags  = PPosition;
-    proprietes->x      = x;
-    proprietes->y      = y;
+    proprietes->x = x;
+    proprietes->y = y;
 
     /* Application des proprietés souhaitées à la fenêtre. */
     XSetWMNormalHints(nouvelle->affichage, nouvelle->ecrans[0], proprietes);
@@ -150,6 +148,13 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
      est dédiée au moment de détruire la fenêtre. */
   nouvelle->composants = creer_file();
 
+  if (nouvelle->composants == NULL)
+  {
+    fprintf(stderr, "creer_fenetre : impossible de créer la file des composants.\n");
+    detruire_fenetre(nouvelle);
+    return NULL;
+  }
+
   /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
   /* XAutoRepeatOff(nouvelle->affichage); */
 
@@ -165,16 +170,17 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
  */
 void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 {
-  XEvent evenement; /* L'événement lié à la fenêtre. */
+  XSetWindowAttributes attributs; /* Les attributs de la fenêtre. */
+  XEvent evenement;               /* L'événement lié à la fenêtre. */
 
 
   a_afficher->ecran_actif = 0U;
 
   /* Modification des attributs de la fenêtre pour un affichage permanent. */
-  a_afficher->attributs.backing_store = Always;
+  attributs.backing_store = Always;
   XChangeWindowAttributes(a_afficher->affichage,
                           a_afficher->ecrans[a_afficher->ecran_actif],
-                          CWBackingStore, &(a_afficher->attributs));
+                          CWBackingStore, &attributs);
 
   /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
   a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", 0);
@@ -182,12 +188,12 @@ void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
                   &(a_afficher->fermeture), 1);
 
   /* Une fois les paramètres définis, la fenêtre peut être affichée à l'écran. */
-  XMapWindow(recuperer_affichage(a_afficher), recuperer_ecran(a_afficher));
+  XMapWindow(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif]);
 
   do
   {
     /* En attente d'un événement d'exposition de la fenêtre. */
-    XNextEvent(recuperer_affichage(a_afficher), &evenement);
+    XNextEvent(a_afficher->affichage, &evenement);
   }
   while (evenement.type != Expose);
 }
@@ -249,8 +255,12 @@ GC recuperer_contexte_graphique(const Fenetre f) /* La fenêtre concernée. */
 
 
 
-Atom fermeture(const Fenetre f)
+/*
+ * Retourne le mode de fermeture d'une fenêtre.
+ */
+Atom fermeture(const Fenetre f) /* La fenêtre concernée. */
 {
+  /* Retourne le mode de fermeture de la fenêtre. */
   return f->fermeture;
 }
 
@@ -303,14 +313,20 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
 
 
 
-void position_souris(const Fenetre f, int * x, int * y)
+/*
+ * Récupère la position de la souris dans la fenêtre.
+ */
+void position_souris(const Fenetre f, /* La fenêtre concernée. */
+                     int * x,         /* L'adresse de retour pour x. */
+                     int * y)         /* L'adresse de retour pour y. */
 {
-  Window w, i;
-  unsigned int mask;
-  int root_x, root_y;
+  Window w, i;         /* Les fenêtres de retour. */
+  unsigned int masque; /* Le masque de retour. */
+  int x_root, y_root;  /* La position par rapport à la fenetre root. */
 
 
-  XQueryPointer(f->affichage, f->ecrans[0], &w, &i, &root_x, &root_y, x, y, &mask);
+  /* Récupère la position de la souris dans la fenêtre. */
+  XQueryPointer(f->affichage, f->ecrans[0], &w, &i, &x_root, &y_root, x, y, &masque);
 }
 
 

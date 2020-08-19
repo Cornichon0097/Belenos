@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../include/rectangle.h"
 
@@ -42,6 +43,7 @@ Rectangle creer_rectangle(int x,                /* L'abscisse, en pixels. */
   /* Sinon, la création du rectangle est abandonnée. */
   else
   {
+    fprintf(stderr, "creer_rectangle : impossible d'allouer une mémoire suffisante.\n");
     detruire_composant(nouveau);
     nouveau = NULL;
   }

@@ -21,6 +21,10 @@ Point creer_point(int x,           /* L'abscisse, en pixels. */
     changer_action_dessiner(nouveau, &dessiner_point);
     changer_action_detruire(nouveau, &detruire_point);
   }
+  else
+  {
+    fprintf(stderr, "creer_point : impossible d'allouer une mémoire suffisante.\n");
+  }
 
 
   /* Retourne le nouveau point. */
@@ -34,10 +38,10 @@ Point creer_point(int x,           /* L'abscisse, en pixels. */
  */
 void dessiner_point(const Point a_dessiner) /* Le point à dessiner. */
 {
+  /* Le point est dessiné. */
   XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
                  recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                  recuperer_couleur(a_dessiner));
-  /* Dessine le point. */
   XDrawPoint(recuperer_affichage(recuperer_fenetre(a_dessiner)), recuperer_ecran(recuperer_fenetre(a_dessiner)),
              recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
              recuperer_x(a_dessiner), recuperer_y(a_dessiner));

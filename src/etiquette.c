@@ -40,6 +40,7 @@ Etiquette creer_etiquette(int x,           /* L'abscisse, en pixels. */
   /* Sinon, la création de l'étiquette est abandonnée. */
   else
   {
+    fprintf(stderr, "creer_etiquette : impossible d'allouer une mémoire suffisante.\n");
     detruire_composant(nouvelle);
     nouvelle = NULL;
   }
@@ -69,16 +70,33 @@ void dessiner_etiquette(const Etiquette a_dessiner) /* L'étiquette à dessiner.
   struct etiquette * etiquette = (struct etiquette*) recuperer_nature(a_dessiner);
 
 
+  /* L'étiquette est dessinée. */
   XSetForeground(recuperer_affichage(recuperer_fenetre(a_dessiner)),
                  recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                  recuperer_couleur(a_dessiner));
-  /* Dessine l'étiquette. */
   XDrawString(recuperer_affichage(recuperer_fenetre(a_dessiner)),
               recuperer_ecran(recuperer_fenetre(a_dessiner)),
               recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
               recuperer_x(a_dessiner), recuperer_y(a_dessiner),
               etiquette->texte, (int) etiquette->longueur);
   XFlush(recuperer_affichage(recuperer_fenetre(a_dessiner)));
+}
+
+
+
+/*
+ * Modifie le texte d'une étiquette.
+ */
+void changer_texte(Etiquette e,  /* L'étiquette concernée. */
+                   char * texte) /* Le nouveau texte. */
+{
+  /* Les propriétés du composant qui en font une étiquette : */
+  struct etiquette * etiquette = (struct etiquette*) recuperer_nature(e);
+
+
+  /* Modifie le texte de l'étiquette. */
+  etiquette->texte = texte;
+  etiquette->longueur = strlen(texte);
 }
 
 

@@ -22,6 +22,11 @@ Etiquette creer_etiquette(int x, int y, char * texte, couleur couleur);
 void dessiner_etiquette(const Etiquette a_dessiner);
 
 /*
+ * Modifie le texte d'une étiquette.
+ */
+void changer_texte(Etiquette e, char * texte);
+
+/*
  * Détruit une étiquette.
  */
 void detruire_etiquette(Etiquette a_detruire);

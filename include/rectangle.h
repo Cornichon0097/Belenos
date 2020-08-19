@@ -3,6 +3,9 @@
 
 #include "../include/composant.h"
 
+#define VIDE   0
+#define REMPLI 1
+
 
 /*
  * La structure d'un rectangle.

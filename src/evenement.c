@@ -31,75 +31,98 @@ int est_ouverte(const Fenetre f) /* La fenêtre concernée. */
   }
 
 
-  /* Si les deux conditions précédentes ne sont pas remplies,
-     alors la fenêtre est toujours ouverte. */
+  /* Retourne 1 si la fenêtre est toujours ouverte. */
   return 1;
 }
 
 
 
-KeySym touche_pressee(const Fenetre f)
+/*
+ * Retourne la touche du clavier pressée (si touche de clavier pressée il y a).
+ */
+KeySym touche_pressee(const Fenetre f) /* La fenêtre concernée. */
 {
-  XEvent evenement;
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
+  /* Vérifie qu'une touche du clavier a été pressée. */
   if (XCheckMaskEvent(recuperer_affichage(f), KeyPressMask, &evenement))
   {
+    /* Si oui, elle est retournée. */
     return XLookupKeysym(&(evenement.xkey), 0);
   }
   else
   {
+    /* Sinon, le symbole vide est retourné. */
     return XK_VoidSymbol;
   }
 }
 
 
 
-KeySym touche_relachee(const Fenetre f)
+/*
+ * Retourne la touche du clavier relâchée (si touche de clavier relâchée il y a).
+ */
+KeySym touche_relachee(const Fenetre f) /* La fenêtre concernée. */
 {
-  XEvent evenement;
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
+  /* Vérifie qu'une touche du clavier a été relâchée. */
   if (XCheckMaskEvent(recuperer_affichage(f), KeyReleaseMask, &evenement))
   {
+    /* Si oui, elle est retournée. */
     return XLookupKeysym(&(evenement.xkey), 0);
   }
   else
   {
+    /* Sinon, le symbole vide est retourné. */
     return XK_VoidSymbol;
   }
 }
 
 
 
-unsigned int bouton_presse(const Fenetre f)
+/*
+ * Retourne le bouton de la souris pressé (si bouton de souris pressé il y a).
+ */
+unsigned int bouton_presse(const Fenetre f) /* La fenêtre concernée. */
 {
-  XEvent evenement;
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
+  /* Vérifie qu'un bouton de la souris a été pressé. */
   if (XCheckMaskEvent(recuperer_affichage(f), ButtonPressMask, &evenement))
   {
+    /* Si oui, il est retourné. */
     return evenement.xbutton.button;
   }
   else
   {
-    return 0;
+    /* Sinon, le symbole vide est retourné. */
+    return VIDE;
   }
 }
 
 
 
-unsigned int bouton_relache(const Fenetre f)
+/*
+ * Retourne le bouton de la souris relâché (si bouton de souris relâché il y a).
+ */
+unsigned int bouton_relache(const Fenetre f) /* La fenêtre concernée. */
 {
-  XEvent evenement;
+  XEvent evenement; /* L'événement lié à la fenêtre. */
 
 
+  /* Vérifie qu'un bouton de la souris a été relâché. */
   if (XCheckMaskEvent(recuperer_affichage(f), ButtonReleaseMask, &evenement))
   {
+    /* Si oui, il est retourné. */
     return evenement.xbutton.button;
   }
   else
   {
-    return 0;
+    /* Sinon, le symbole vide est retourné. */
+    return VIDE;
   }
 }

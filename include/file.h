@@ -44,6 +44,9 @@ Composant dequeue(File f);
  */
 int empty(File f);
 
+/*
+ * Retourne le premier maillon d'une file.
+ */
 struct maillon * top(File f);
 
 /*

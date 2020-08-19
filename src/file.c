@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../include/file.h"
 
@@ -31,6 +32,10 @@ File creer_file()
     /* Initialisation de la file. */
     nouvelle->premier = NULL;
     nouvelle->dernier = NULL;
+  }
+  else
+  {
+    fprintf(stderr, "creer_file : impossible d'allouer une mémoire suffisante.\n");
   }
 
 
@@ -125,8 +130,12 @@ int empty(File f) /* La file concernée. */
 
 
 
-struct maillon * top(File f)
+/*
+ * Retourne le premier maillon d'une file.
+ */
+struct maillon * top(File f) /* La file concernée. */
 {
+  /* Retourne le premier maillon de la file. */
   return f->premier;
 }
 

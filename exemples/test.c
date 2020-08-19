@@ -44,17 +44,16 @@ int main(void)
 
   while (est_ouverte(f))
   {
-    if (bouton_presse(f) == 1)
+    if (bouton_presse(f) == CLIQUE_GAUCHE)
     {
       position_souris(f, &x, &y);
-      printf("Clique !\n");
     }
 
-    if (bouton_relache(f) == 1)
+    if (bouton_relache(f) == CLIQUE_GAUCHE)
     {
       position_souris(f, &l, &h);
-      ajouter(f, creer_rectangle(x, y, difference_positive(x, l), difference_positive(y, h), NOIR, 0));
-      printf("Relaché !\n");
+      ajouter(f, creer_rectangle(x, y, difference_positive(x, l),
+              difference_positive(y, h), NOIR, VIDE));
     }
   }
 
