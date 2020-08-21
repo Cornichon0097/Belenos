@@ -40,9 +40,9 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                       int largeur, /* La largeur, en pixels. */
                       int hauteur) /* La hauteur, en pixels. */
 {
-  Fenetre nouvelle;   /* La nouvelle fenêtre. */
+  Fenetre nouvelle;        /* La nouvelle fenêtre. */
   XSizeHints * proprietes; /* Les proprietés de la fenêtre. */
-  int i;          /* Variable itérative. */
+  int i;                   /* Variable itérative. */
 
 
   /* Allocation d'un espace mémoire pour le composant. */
@@ -309,24 +309,6 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */
   action(a_ajouter).dessiner(a_ajouter);
-}
-
-
-
-/*
- * Récupère la position de la souris dans la fenêtre.
- */
-void position_souris(const Fenetre f, /* La fenêtre concernée. */
-                     int * x,         /* L'adresse de retour pour x. */
-                     int * y)         /* L'adresse de retour pour y. */
-{
-  Window w, i;         /* Les fenêtres de retour. */
-  unsigned int masque; /* Le masque de retour. */
-  int x_root, y_root;  /* La position par rapport à la fenetre root. */
-
-
-  /* Récupère la position de la souris dans la fenêtre. */
-  XQueryPointer(f->affichage, f->ecrans[0], &w, &i, &x_root, &y_root, x, y, &masque);
 }
 
 

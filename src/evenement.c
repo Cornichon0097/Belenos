@@ -84,6 +84,25 @@ KeySym touche_relachee(const Fenetre f) /* La fenêtre concernée. */
 
 
 /*
+ * Récupère la position de la souris dans la fenêtre.
+ */
+void position_souris(const Fenetre f, /* La fenêtre concernée. */
+                     int * x,         /* L'adresse de retour pour x. */
+                     int * y)         /* L'adresse de retour pour y. */
+{
+  Window w, i;         /* Les fenêtres de retour. */
+  unsigned int masque; /* Le masque de retour. */
+  int x_root, y_root;  /* La position par rapport à la fenetre root. */
+
+
+  /* Récupère la position de la souris dans la fenêtre. */
+  XQueryPointer(recuperer_affichage(f), recuperer_ecran(f),
+                &w, &i, &x_root, &y_root, x, y, &masque);
+}
+
+
+
+/*
  * Retourne le bouton de la souris pressé (si bouton de souris pressé il y a).
  */
 unsigned int bouton_presse(const Fenetre f) /* La fenêtre concernée. */

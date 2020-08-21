@@ -60,17 +60,6 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
 
 
 /*
- * Dessine un composant.
- */
-void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
-{
-  /* Un simple composant ne peut pas être dessiné. */
-  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
-}
-
-
-
-/*
  * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
  * qu'à une seule fenêtre.
  */
@@ -88,6 +77,17 @@ void changer_fenetre(Fenetre f,   /* La nouvelle fenêtre. */
     fprintf(stderr, "changer_fenetre : un composant ne peut ");
     fprintf(stderr, "appartenir qu'à une seule fenêtre.\n");
   }
+}
+
+
+
+/*
+ * Dessine un composant.
+ */
+void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
+{
+  /* Un simple composant ne peut pas être dessiné. */
+  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
 }
 
 

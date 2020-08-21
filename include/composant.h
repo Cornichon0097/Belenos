@@ -42,15 +42,15 @@ struct vtable
 Composant creer_composant(int x, int y, couleur couleur);
 
 /*
- * Dessine un composant.
- */
-void dessiner_composant(const Composant a_dessiner);
-
-/*
  * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
  * qu'à une seule fenêtre.
  */
 void changer_fenetre(Fenetre f, Composant c);
+
+/*
+ * Dessine un composant.
+ */
+void dessiner_composant(const Composant a_dessiner);
 
 /*
  * Retourne la fenêtre à laquelle appartient un composant.

@@ -61,11 +61,6 @@ void rafraichir(const Fenetre a_rafraichir);
 void ajouter(const Fenetre f, Composant a_ajouter); /* ! Pas adaptée aux écrans ! */
 
 /*
- * Récupère la position de la souris dans la fenêtre.
- */
-void position_souris(const Fenetre f, int * x, int * y);
-
-/*
  * Détruit une fenêtre.
  */
 void detruire_fenetre(Fenetre a_detruire);

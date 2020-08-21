@@ -29,6 +29,11 @@ KeySym touche_pressee(const Fenetre f);
 KeySym touche_relachee(const Fenetre f);
 
 /*
+ * Récupère la position de la souris dans la fenêtre.
+ */
+void position_souris(const Fenetre f, int * x, int * y);
+
+/*
  * Retourne le bouton de la souris pressé (si bouton de souris pressé il y a).
  */
 unsigned int bouton_presse(const Fenetre f);
