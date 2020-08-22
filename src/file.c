@@ -48,8 +48,8 @@ File creer_file()
 /*
  * Ajoute un composant à (la fin d') une file.
  */
-void enqueue(File destination,    /* La file destination. */
-             Composant a_ajouter) /* Le composant à ajouter. */
+void enqueue(File      destination, /* La file destination. */
+             Composant a_ajouter)   /* Le composant à ajouter. */
 {
   struct maillon * nouveau; /* Le nouveau maillon. */
 

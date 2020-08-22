@@ -11,11 +11,12 @@
  */
 struct composant
 {
-  Fenetre fenetre;       /* La fenêtre associée. */
-  short x;               /* L'abscisse, en pixels. */
-  short y;               /* L'ordonnée, en pixels. */
-  couleur couleur;       /* La couleur. */
-  void * nature;         /* La nature. */
+  Fenetre       fenetre; /* La fenêtre associée. */
+  Window        ecran;   /*  */
+  short         x;       /* L'abscisse, en pixels. */
+  short         y;       /* L'ordonnée, en pixels. */
+  couleur       couleur; /* La couleur. */
+  void *        nature;  /* La nature. */
   struct vtable actions; /* Les actions disponibles. */
 };
 
@@ -24,8 +25,8 @@ struct composant
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int x,           /* L'abscisse, en pixels. */
-                          int y,           /* L'ordonnée, en pixels. */
+Composant creer_composant(int     x,       /* L'abscisse, en pixels. */
+                          int     y,       /* L'ordonnée, en pixels. */
                           couleur couleur) /* La couleur. */
 {
   Composant nouveau; /* Le nouveau composant. */
@@ -39,10 +40,10 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
   {
     /* Initialisation du composant. */
     nouveau->fenetre = NULL;
-    nouveau->x = (short) x;
-    nouveau->y = (short) y;
+    nouveau->x       = (short) x;
+    nouveau->y       = (short) y;
     nouveau->couleur = couleur;
-    nouveau->nature = NULL;
+    nouveau->nature  = NULL;
     /* Initialisation de la vtable. */
     nouveau->actions.dessiner = &dessiner_composant;
     nouveau->actions.detruire = &detruire_composant;
@@ -60,11 +61,22 @@ Composant creer_composant(int x,           /* L'abscisse, en pixels. */
 
 
 /*
+ * Dessine un composant.
+ */
+void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
+{
+  /* Un simple composant ne peut pas être dessiné. */
+  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
+}
+
+
+
+/*
  * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
  * qu'à une seule fenêtre.
  */
-void changer_fenetre(Fenetre f,   /* La nouvelle fenêtre. */
-                     Composant c) /* Le composant concerné. */
+void changer_fenetre(Composant c, /* Le composant concerné. */
+                     Fenetre   f) /* La nouvelle fenêtre. */
 {
   /* Le composant ne peut appartenir qu'à une seule fenêtre. */
   if (c->fenetre == NULL)
@@ -82,17 +94,6 @@ void changer_fenetre(Fenetre f,   /* La nouvelle fenêtre. */
 
 
 /*
- * Dessine un composant.
- */
-void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
-{
-  /* Un simple composant ne peut pas être dessiné. */
-  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
-}
-
-
-
-/*
  * Retourne la fenêtre à laquelle appartient un composant.
  */
 Fenetre recuperer_fenetre(const Composant c) /* Le composant concerné. */
@@ -104,10 +105,43 @@ Fenetre recuperer_fenetre(const Composant c) /* Le composant concerné. */
 
 
 /*
+ * Modifie l'écran auquel appartient un composant. Un composant ne peut appartenir
+ * qu'à un seul écran.
+ */
+void changer_ecran(Composant c, /*  */
+                   Window    w) /*  */
+{
+  /* Le composant ne peut appartenir qu'a un seul écran. */
+  if (c->ecran == 0)
+  {
+    /* Modifie l'écran auquel appartient le composant. */
+    c->ecran = w;
+  }
+  else
+  {
+    fprintf(stderr, "changer_ecran : un composant ne peut ");
+    fprintf(stderr, "appartenir qu'à un seul écran.\n");
+  }
+}
+
+
+
+/*
+ * Retourne l'écran auquel appartient un composant.
+ */
+Window recuperer_ecran(const Composant c) /* Le composant concerné. */
+{
+  /* Retourne l'écran auquel appartient le composant. */
+  return c->ecran;
+}
+
+
+
+/*
  * Modifie l'abscisse d'un composant.
  */
 void changer_x(Composant c, /* Le composant concerné. */
-               int x)       /* La nouvelle abscisse. */
+               int       x) /* La nouvelle abscisse. */
 {
   /* Modifie l'abscisse du composant. */
   c->x = (short) x;
@@ -136,7 +170,7 @@ int recuperer_x(const Composant c) /* Le composant concerné. */
  * Modifie l'ordonnée d'un composant.
  */
 void changer_y(Composant c, /* Le composant concerné. */
-               int y)       /* La nouvelle ordonnée. */
+               int       y) /* La nouvelle ordonnée. */
 {
   /* Modifie l'ordonnée du composant. */
   c->y = (short) y;
@@ -164,8 +198,8 @@ int recuperer_y(const Composant c) /* Le composant concerné. */
 /*
  * Modifie la couleur d'un composant.
  */
-void changer_couleur(Composant c,     /* Le composant concerné. */
-                     couleur couleur) /* La nouvelle couleur. */
+void changer_couleur(Composant c,       /* Le composant concerné. */
+                     couleur   couleur) /* La nouvelle couleur. */
 {
   /* Modifie la couleur du composant. */
   c->couleur = couleur;
@@ -193,8 +227,8 @@ couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
 /*
  * Modifie la nature d'un composant. La nature d'un composant est unique.
  */
-void changer_nature(Composant c,   /* Le composant concerné. */
-                    void * nature) /* La nouvelle nature. */
+void changer_nature(Composant c,      /* Le composant concerné. */
+                    void *    nature) /* La nouvelle nature. */
 {
   /* La nature du composant est unique. */
   if (c->nature == NULL)
@@ -224,7 +258,7 @@ void * recuperer_nature(const Composant c) /* Le composant concerné. */
 /*
  * Modifie la fonction de dessin d'un composant.
  */
-void changer_action_dessiner(Composant c,          /* Le composant concerné. */
+void changer_action_dessiner(Composant   c,        /* Le composant concerné. */
                              dessinateur dessiner) /* La fonction de dessin. */
 {
   /* Modifie la fonction de dessin du composant. */
@@ -236,7 +270,7 @@ void changer_action_dessiner(Composant c,          /* Le composant concerné. */
 /*
  * Modifie le destructeur d'un composant.
  */
-void changer_action_detruire(Composant c,          /* Le composant concerné. */
+void changer_action_detruire(Composant   c,        /* Le composant concerné. */
                              destructeur detruire) /* Le destructeur. */
 {
   /* Modifie le destructeur du composant. */

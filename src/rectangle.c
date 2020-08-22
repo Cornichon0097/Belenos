@@ -81,7 +81,7 @@ void dessiner_rectangle(const Rectangle a_dessiner) /* Le rectangle à dessiner.
   if (rectangle->remplissage)
   {
     XFillRectangle(recuperer_affichage(recuperer_fenetre(a_dessiner)),
-                   recuperer_ecran(recuperer_fenetre(a_dessiner)),
+                   recuperer_ecran(a_dessiner),
                    recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                    recuperer_x(a_dessiner), recuperer_y(a_dessiner),
                    (unsigned int) rectangle->largeur, (unsigned int) rectangle->hauteur);
@@ -89,7 +89,7 @@ void dessiner_rectangle(const Rectangle a_dessiner) /* Le rectangle à dessiner.
   else
   {
     XDrawRectangle(recuperer_affichage(recuperer_fenetre(a_dessiner)),
-                   recuperer_ecran(recuperer_fenetre(a_dessiner)),
+                   recuperer_ecran(a_dessiner),
                    recuperer_contexte_graphique(recuperer_fenetre(a_dessiner)),
                    recuperer_x(a_dessiner), recuperer_y(a_dessiner),
                    (unsigned int) rectangle->largeur, (unsigned int) rectangle->hauteur);

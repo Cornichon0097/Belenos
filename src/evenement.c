@@ -96,7 +96,7 @@ void position_souris(const Fenetre f, /* La fenêtre concernée. */
 
 
   /* Récupère la position de la souris dans la fenêtre. */
-  XQueryPointer(recuperer_affichage(f), recuperer_ecran(f),
+  XQueryPointer(recuperer_affichage(f), recuperer_ecran_principal(f),
                 &w, &i, &x_root, &y_root, x, y, &masque);
 }
 

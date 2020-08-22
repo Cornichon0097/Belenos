@@ -6,8 +6,7 @@
 #include "../include/fenetre.h"
 #include "../include/file.h"
 
-#define NOMBRE_ECRANS 5  /* Le nombre d'écrans disponibles pour dessiner. */
-#define BORDURE       1U /* La taille des bordures de la fenêtre. */
+#define BORDURE 1U /* La taille des bordures de la fenêtre. */
 
 
 /*
@@ -22,12 +21,10 @@
 struct fenetre
 {
   Display * affichage;          /* L'affichage, structure principale de Xlib. */
-  int ecran_par_defaut;         /* L'écran par défaut. */
-  Window ecrans[NOMBRE_ECRANS]; /* Les écrans pour dessiner. */
-  unsigned char ecran_actif;    /* L'écran actif. */
-  GC contexte_graphique;        /* Le contexte graphique. */
-  Atom fermeture;               /* L'action de fermeture. */
-  File composants;              /* La file des composants graphiques. */
+  Window    ecran_principal;    /* L'écran pour dessiner. */
+  GC        contexte_graphique; /* Le contexte graphique. */
+  Atom      fermeture;          /* L'action de fermeture. */
+  File      composants;         /* La file des composants graphiques. */
 };
 
 
@@ -35,14 +32,14 @@ struct fenetre
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
-                      int y,       /* L'ordonnée, en pixels. */
-                      int largeur, /* La largeur, en pixels. */
-                      int hauteur) /* La hauteur, en pixels. */
+Fenetre creer_fenetre(int          x,       /* L'abscisse, en pixels. */
+                      int          y,       /* L'ordonnée, en pixels. */
+                      unsigned int largeur, /* La largeur, en pixels. */
+                      unsigned int hauteur) /* La hauteur, en pixels. */
 {
-  Fenetre nouvelle;        /* La nouvelle fenêtre. */
-  XSizeHints * proprietes; /* Les proprietés de la fenêtre. */
-  int i;                   /* Variable itérative. */
+  Fenetre      nouvelle;         /* La nouvelle fenêtre. */
+  XSizeHints * proprietes;       /* Les proprietés de la fenêtre. */
+  int          ecran_par_defaut; /* L'écran par défaut. */
 
 
   /* Allocation d'un espace mémoire pour le composant. */
@@ -67,19 +64,25 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
     return NULL;
   }
 
-  /* L'écran par défaut. */
-  nouvelle->ecran_par_defaut = XDefaultScreen(nouvelle->affichage);
+  ecran_par_defaut = XDefaultScreen(nouvelle->affichage);
 
   /* Création de la fenêtre. */
-  nouvelle->ecrans[0] = XCreateSimpleWindow(nouvelle->affichage,
-                                            XRootWindow(nouvelle->affichage,
-                                                        nouvelle->ecran_par_defaut),
-                                            x, y, (unsigned int) largeur,
-                                            (unsigned int) hauteur, BORDURE,
-                                            XBlackPixel(nouvelle->affichage,
-                                                        nouvelle->ecran_par_defaut),
-                                            XWhitePixel(nouvelle->affichage,
-                                                        nouvelle->ecran_par_defaut));
+  nouvelle->ecran_principal = XCreateSimpleWindow(nouvelle->affichage,
+                                                  XRootWindow(nouvelle->affichage,
+                                                              ecran_par_defaut),
+                                                  x, y, largeur, hauteur, BORDURE,
+                                                  XBlackPixel(nouvelle->affichage,
+                                                              ecran_par_defaut),
+                                                  XWhitePixel(nouvelle->affichage,
+                                                              ecran_par_defaut));
+
+  /* Vérifie que la fenêtre a bien été créée. */
+  if (nouvelle->ecran_principal == 0)
+  {
+    fprintf(stderr, "creer_fenetre : impossible de créer la fenêtre.\n");
+    detruire_fenetre(nouvelle);
+    return NULL;
+  }
 
   /* La position demadée pour la nouvelle fenêtre peut ne pas être prise en compte lors
      de sa création. Il faut donc essayé de régler le problème. */
@@ -88,11 +91,11 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
   if (proprietes)
   {
     proprietes->flags  = PPosition;
-    proprietes->x = x;
-    proprietes->y = y;
+    proprietes->x      = x;
+    proprietes->y      = y;
 
     /* Application des proprietés souhaitées à la fenêtre. */
-    XSetWMNormalHints(nouvelle->affichage, nouvelle->ecrans[0], proprietes);
+    XSetWMNormalHints(nouvelle->affichage, nouvelle->ecran_principal, proprietes);
     XFree(proprietes);
   }
   else
@@ -101,37 +104,10 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
     fprintf(stderr, "aux coordonnées demadées.\n");
   }
 
-  /* Vérifie que la fenêtre a bien été créée. */
-  if (nouvelle->ecrans[0] == 0)
-  {
-    fprintf(stderr, "creer_fenetre : impossible de créer la fenêtre.\n");
-    detruire_fenetre(nouvelle);
-    return NULL;
-  }
-
-  /* Création d'écrans non affichables. Il est cependant possible de s'en servir pour
-     dessiner, au même titre que la fenêtre. */
-  for (i = 1; i < NOMBRE_ECRANS; i++)
-  {
-    nouvelle->ecrans[i] = XCreatePixmap(nouvelle->affichage,
-                                        XDefaultRootWindow(nouvelle->affichage),
-                                        largeur, hauteur,
-                                        XDefaultDepth(nouvelle->affichage,
-                                                      nouvelle->ecran_par_defaut));
-
-    /* Vérifie que les écrans ont bien été créés. */
-    if (nouvelle->ecrans[i] == 0)
-    {
-      fprintf(stderr, "creer_fenetre : impossible de créer les écrans pour dessiner.\n");
-      detruire_fenetre(nouvelle);
-      return NULL;
-    }
-  }
-
   /* Les événements gérés par la fenêtre. Ici, la fenêtre référencera dans une file
      dédiée les événements liés à l'exposition de la fenêtre, à la pression d'une
      touche du clavier et aux cliques de la souris. */
-  XSelectInput(nouvelle->affichage, nouvelle->ecrans[0],
+  XSelectInput(nouvelle->affichage, nouvelle->ecran_principal,
                ExposureMask            /* Exposition de la fenêtre. */
                | KeyPressMask          /* Touche de clavier pressée. */
                | KeyReleaseMask        /* Touche de clavier relâchée. */
@@ -140,8 +116,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
                | StructureNotifyMask); /* Changement de structure de la fenêtre. */
 
   /* Le contexte graphique de la fenêtre, indispensable pour dessiner. */
-  nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage,
-                                            nouvelle->ecran_par_defaut);
+  nouvelle->contexte_graphique = XDefaultGC(nouvelle->affichage, ecran_par_defaut);
 
   /* La file des composants graphiques. Tous les composants graphiques ajoutés à la
      à la fenêtre y seront répertoriés, afin de pouvoir libérer la mémoire qui leur
@@ -155,7 +130,7 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
     return NULL;
   }
 
-  /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecrans[nouvelle->ecran_actif], 0x0); */
+  /* XSetWindowBackground(nouvelle->affichage, nouvelle->ecran, 0x0); */
   /* XAutoRepeatOff(nouvelle->affichage); */
 
 
@@ -171,24 +146,21 @@ Fenetre creer_fenetre(int x,       /* L'abscisse, en pixels. */
 void afficher_fenetre(Fenetre a_afficher) /* La fenêtre à afficher. */
 {
   XSetWindowAttributes attributs; /* Les attributs de la fenêtre. */
-  XEvent evenement;               /* L'événement lié à la fenêtre. */
+  XEvent               evenement; /* L'événement lié à la fenêtre. */
 
-
-  a_afficher->ecran_actif = 0U;
 
   /* Modification des attributs de la fenêtre pour un affichage permanent. */
   attributs.backing_store = Always;
-  XChangeWindowAttributes(a_afficher->affichage,
-                          a_afficher->ecrans[a_afficher->ecran_actif],
+  XChangeWindowAttributes(a_afficher->affichage, a_afficher->ecran_principal,
                           CWBackingStore, &attributs);
 
   /* L'action de fermeture par défaut de la fenêtre est de cliquer sur la croix. */
   a_afficher->fermeture = XInternAtom(a_afficher->affichage, "WM_DELETE_WINDOW", 0);
-  XSetWMProtocols(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif],
+  XSetWMProtocols(a_afficher->affichage, a_afficher->ecran_principal,
                   &(a_afficher->fermeture), 1);
 
   /* Une fois les paramètres définis, la fenêtre peut être affichée à l'écran. */
-  XMapWindow(a_afficher->affichage, a_afficher->ecrans[a_afficher->ecran_actif]);
+  XMapWindow(a_afficher->affichage, a_afficher->ecran_principal);
 
   do
   {
@@ -212,34 +184,12 @@ Display * recuperer_affichage(const Fenetre f) /* La fenêtre concernée. */
 
 
 /*
- * Modifie l'écran actif d'une fenêtre.
- */
-void changer_ecran(Fenetre f,       /* La fenêtre concernée. */
-                   int ecran_actif) /* Le nouvel écran actif. */
-{
-  fprintf(stdout, "Pas encore...\n");
-  return;
-
-  /* Vérifie que le nouvel écran actif existe. */
-  if ((ecran_actif >= 0) && (ecran_actif < NOMBRE_ECRANS))
-  {
-    f->ecran_actif = (unsigned char) ecran_actif;
-  }
-  else
-  {
-    fprintf(stderr, "changer_ecran : l'écran %d n'existe pas.\n", ecran_actif);
-  }
-}
-
-
-
-/*
  * Retourne l'écran actif d'une fenêtre.
  */
-Window recuperer_ecran(const Fenetre f) /* La fenêtre concernée. */
+Window recuperer_ecran_principal(const Fenetre f) /* La fenêtre concernée. */
 {
   /* Retourne l'écran actif de la fenêtre. */
-  return f->ecrans[0];
+  return f->ecran_principal;
 }
 
 
@@ -275,8 +225,7 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
 
 
   /* Efface la fenêtre. */
-  XClearWindow(a_rafraichir->affichage,
-               a_rafraichir->ecrans[a_rafraichir->ecran_actif]);
+  XClearWindow(a_rafraichir->affichage, a_rafraichir->ecran_principal);
 
   /* Tous les composants de la fenêtre sont redessinés. */
   while (m)
@@ -294,7 +243,7 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
  * ajouté dans la fenêtre destination, sur l'écran actif uniquement.
  */
 void ajouter(const Fenetre destination, /* La fenêtre destination. */
-             Composant a_ajouter)       /* Le composant à ajouter. */
+             Composant     a_ajouter)   /* Le composant à ajouter. */
 {
   /* Vérifie que le composant à ajouter n'est pas nul. */
   if (a_ajouter == NULL)
@@ -303,8 +252,8 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
     return;
   }
 
-  /* Le composant a besoin de connaître la fenêtre à laquelle il appartient. */
-  changer_fenetre(destination, a_ajouter);
+  changer_fenetre(a_ajouter, destination);
+  changer_ecran(a_ajouter, destination->ecran_principal);
   /* Le composant est ajouté à la file des composants graphiques. */
   enqueue(destination->composants, a_ajouter);
   /* Une fois ajouté à la file, le composant est dessiné. */

@@ -17,7 +17,7 @@ typedef struct fenetre* Fenetre;
 /*
  * Crée une nouvelle fenêtre.
  */
-Fenetre creer_fenetre(int x, int y, int largeur, int hauteur);
+Fenetre creer_fenetre(int x, int y, unsigned int largeur, unsigned int hauteur);
 
 /*
  * Affiche une fenêtre à l'écran.
@@ -30,14 +30,9 @@ void afficher_fenetre(Fenetre f);
 Display * recuperer_affichage(const Fenetre f);
 
 /*
- * Modifie l'écran actif d'une fenêtre.
- */
-void changer_ecran(Fenetre f, int ecran_actif);
-
-/*
  * Retourne l'écran actif d'une fenêtre.
  */
-Window recuperer_ecran(const Fenetre f);
+Window recuperer_ecran_principal(const Fenetre f);
 
 /*
  * Retourne le contexte graphique d'une fenêtre.
@@ -56,9 +51,9 @@ void rafraichir(const Fenetre a_rafraichir);
 
 /*
  * Ajoute un composant à une fenêtre. Cette action a pour effet de dessiner le composant
- * ajouté dans la fenêtre destination, sur l'écran actif uniquement.
+ * ajouté dans la fenêtre destination.
  */
-void ajouter(const Fenetre f, Composant a_ajouter); /* ! Pas adaptée aux écrans ! */
+void ajouter(const Fenetre f, Composant a_ajouter);
 
 /*
  * Détruit une fenêtre.

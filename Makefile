@@ -2,38 +2,37 @@ CC = gcc
 CFLAGS = -Wall -pedantic -ansi -g
 
 RM = rm -f
+MKDIR = mkdir
 
 EXEMPLE = ./exemples/
 INCLUDE = ./include/
 SOURCE = ./src/
 OBJECT = ./obj/
 
-MAIN = main_rectangle
+MAIN = main
 EXECUTABLE = executable.out
 
 OFILES = $(OBJECT)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o \
-				 $(OBJECT)point.o \
 				 $(OBJECT)rectangle.o \
-				 $(OBJECT)etiquette.o \
 				 $(OBJECT)evenement.o
 
 
 but: $(OBJECT) $(EXECUTABLE)
 
 $(OBJECT):
-	mkdir $@
+	$(MKDIR) $@
 
 $(EXECUTABLE): $(OFILES)
 	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
 
-$(OBJECT)main_rectangle.o: $(EXEMPLE)main_rectangle.c \
-	                         $(INCLUDE)fenetre.h \
-							             $(INCLUDE)couleur.h \
-								           $(INCLUDE)rectangle.h \
-								           $(INCLUDE)evenement.h
+$(OBJECT)main.o: $(EXEMPLE)main.c \
+	               $(INCLUDE)fenetre.h \
+							   $(INCLUDE)couleur.h \
+								 $(INCLUDE)rectangle.h \
+								 $(INCLUDE)evenement.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
@@ -52,18 +51,8 @@ $(OBJECT)composant.o: $(SOURCE)composant.c \
 											$(INCLUDE)fenetre.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)point.o: $(SOURCE)point.c \
-	                $(INCLUDE)point.h \
-									$(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
-
 $(OBJECT)rectangle.o: $(SOURCE)rectangle.c \
 	                    $(INCLUDE)rectangle.h \
-									    $(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
-
-$(OBJECT)etiquette.o: $(SOURCE)etiquette.c \
-	                    $(INCLUDE)etiquette.h \
 									    $(INCLUDE)composant.h
 	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
@@ -79,6 +68,10 @@ run: but
 clean:
 	$(RM) $(OFILES)
 
+mrproper: clean
+	$(RM) $(EXEC)
+
 .PHONY: but \
 	      run \
-				clean
+				clean \
+				mrproper

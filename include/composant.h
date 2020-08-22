@@ -42,20 +42,31 @@ struct vtable
 Composant creer_composant(int x, int y, couleur couleur);
 
 /*
- * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
- * qu'à une seule fenêtre.
- */
-void changer_fenetre(Fenetre f, Composant c);
-
-/*
  * Dessine un composant.
  */
 void dessiner_composant(const Composant a_dessiner);
 
 /*
+ * Modifie la fenêtre à laquelle appartient un composant. Un composant ne peut appartenir
+ * qu'à une seule fenêtre.
+ */
+void changer_fenetre(Composant c, Fenetre f);
+
+/*
  * Retourne la fenêtre à laquelle appartient un composant.
  */
 Fenetre recuperer_fenetre(const Composant c);
+
+/*
+ * Modifie l'écran auquel appartient un composant. Un composant ne peut appartenir
+ * qu'à un seul écran.
+ */
+void changer_ecran(Composant c, Window w);
+
+/*
+ * Retourne l'écran auquel appartient un composant.
+ */
+Window recuperer_ecran(const Composant c);
 
 /*
  * Modifie l'abscisse d'un composant.
