@@ -25,6 +25,7 @@ struct fenetre
   GC        contexte_graphique; /* Le contexte graphique. */
   Atom      fermeture;          /* L'action de fermeture. */
   File      composants;         /* La file des composants graphiques. */
+  Grille    gestionnaire;
 };
 
 
@@ -222,6 +223,7 @@ Atom fermeture(const Fenetre f) /* La fenêtre concernée. */
 void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
 {
   struct maillon * m = top(a_rafraichir->composants); /* Le premier maillon. */
+  XWindowAttributes a;
 
 
   /* Efface la fenêtre. */
@@ -234,6 +236,9 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
     /* Une fois le composant dessiné, on passe au suivant. */
     m = m->suivant;
   }
+
+  XGetWindowAttributes(a_rafraichir->affichage, a_rafraichir->ecran_principal, &a);
+  printf("%u\n", a.width);
 }
 
 
