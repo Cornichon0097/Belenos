@@ -5,7 +5,7 @@
 
 #include "../include/fenetre.h"
 
-/* Les boutons principaux de la souris. */
+/* Les principaux boutons de la souris. */
 #define VIDE           0
 #define CLIQUE_GAUCHE  1
 #define CLIQUE_MOLETTE 2

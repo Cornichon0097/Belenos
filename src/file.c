@@ -21,7 +21,7 @@ struct file
 /*
  * Crée une nouvelle file.
  */
-File creer_file()
+File creer_file(void)
 {
   File nouvelle = (File) malloc(sizeof(struct file)); /* La nouvelle file. */
 

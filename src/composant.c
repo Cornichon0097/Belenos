@@ -11,13 +11,12 @@
  */
 struct composant
 {
-  Fenetre       fenetre; /* La fenêtre associée. */
-  Window        ecran;   /*  */
-  short         x;       /* L'abscisse, en pixels. */
-  short         y;       /* L'ordonnée, en pixels. */
-  couleur       couleur; /* La couleur. */
-  void *        nature;  /* La nature. */
-  struct vtable actions; /* Les actions disponibles. */
+  Fenetre       fenetre;      /* La fenêtre associée. */
+  Window        ecran;        /*  */ /* Encore en phase de test. */
+  couleur       premier_plan; /* La couleur du premier plan. */
+  couleur       arriere_plan; /* La couleur de l'arrière plan. */
+  void *        nature;       /* La nature. Elle définit le composant. */
+  struct vtable actions;      /* Les actions disponibles. */
 };
 
 
@@ -25,9 +24,7 @@ struct composant
 /*
  * Crée un nouveau composant.
  */
-Composant creer_composant(int     x,       /* L'abscisse, en pixels. */
-                          int     y,       /* L'ordonnée, en pixels. */
-                          couleur couleur) /* La couleur. */
+Composant creer_composant(void)
 {
   Composant nouveau; /* Le nouveau composant. */
 
@@ -39,18 +36,19 @@ Composant creer_composant(int     x,       /* L'abscisse, en pixels. */
   if (nouveau)
   {
     /* Initialisation du composant. */
-    nouveau->fenetre = NULL;
-    nouveau->x       = (short) x;
-    nouveau->y       = (short) y;
-    nouveau->couleur = couleur;
-    nouveau->nature  = NULL;
+    nouveau->fenetre      = NULL;
+    nouveau->ecran        = 0;
+    nouveau->premier_plan = NOIR;
+    nouveau->arriere_plan = BLANC;
+    nouveau->nature       = NULL;
     /* Initialisation de la vtable. */
     nouveau->actions.dessiner = &dessiner_composant;
     nouveau->actions.detruire = &detruire_composant;
   }
   else
   {
-    fprintf(stderr, "creer_composant : impossible d'allouer une mémoire suffisante.\n");
+    fprintf(stderr, "creer_composant() : impossible d'allouer ");
+    fprintf(stderr, "une zone mémoire suffisante.\n");
   }
 
 
@@ -65,8 +63,26 @@ Composant creer_composant(int     x,       /* L'abscisse, en pixels. */
  */
 void dessiner_composant(const Composant a_dessiner) /* Le composant à dessiner. */
 {
-  /* Un simple composant ne peut pas être dessiné. */
-  fprintf(stderr, "dessiner : impossible de dessiner le composant.\n");
+  XWindowAttributes attributs;
+
+
+  if (a_dessiner->fenetre == NULL)
+  {
+    fprintf(stderr, "dessiner_composant() : le composant ");
+    fprintf(stderr, "n'appartient pas à une fenêtre.\n");
+    return;
+  }
+
+  XGetWindowAttributes(recuperer_affichage(a_dessiner->fenetre),
+                        a_dessiner->ecran, &attributs);
+
+  XSetForeground(recuperer_affichage(a_dessiner->fenetre),
+                 recuperer_contexte_graphique(a_dessiner->fenetre),
+                 a_dessiner->arriere_plan);
+  XFillRectangle(recuperer_affichage(a_dessiner->fenetre), a_dessiner->ecran,
+                 recuperer_contexte_graphique(a_dessiner->fenetre),
+                 0, 0, attributs.width, attributs.height);
+  XFlush(recuperer_affichage(a_dessiner->fenetre));
 }
 
 
@@ -86,7 +102,7 @@ void changer_fenetre(Composant c, /* Le composant concerné. */
   }
   else
   {
-    fprintf(stderr, "changer_fenetre : un composant ne peut ");
+    fprintf(stderr, "changer_fenetre() : un composant ne peut ");
     fprintf(stderr, "appartenir qu'à une seule fenêtre.\n");
   }
 }
@@ -108,8 +124,8 @@ Fenetre recuperer_fenetre(const Composant c) /* Le composant concerné. */
  * Modifie l'écran auquel appartient un composant. Un composant ne peut appartenir
  * qu'à un seul écran.
  */
-void changer_ecran(Composant c, /*  */
-                   Window    w) /*  */
+void changer_ecran(Composant c, /* Le composant concerné. */
+                   Window    w) /* Le nouvel écran. */
 {
   /* Le composant ne peut appartenir qu'a un seul écran. */
   if (c->ecran == 0)
@@ -119,7 +135,7 @@ void changer_ecran(Composant c, /*  */
   }
   else
   {
-    fprintf(stderr, "changer_ecran : un composant ne peut ");
+    fprintf(stderr, "changer_ecran() : un composant ne peut ");
     fprintf(stderr, "appartenir qu'à un seul écran.\n");
   }
 }
@@ -138,13 +154,13 @@ Window recuperer_ecran(const Composant c) /* Le composant concerné. */
 
 
 /*
- * Modifie l'abscisse d'un composant.
+ * Modifie la couleur du premier plan d'un composant.
  */
-void changer_x(Composant c, /* Le composant concerné. */
-               int       x) /* La nouvelle abscisse. */
+void changer_premier_plan(Composant c,       /* Le composant concerné. */
+                          couleur   couleur) /* La nouvelle couleur. */
 {
-  /* Modifie l'abscisse du composant. */
-  c->x = (short) x;
+  /* Modifie la couleur du premier plan du composant. */
+  c->premier_plan = couleur;
 
   /* Rafraîchit la fenêtre si nécessaire. */
   if (c->fenetre)
@@ -156,24 +172,24 @@ void changer_x(Composant c, /* Le composant concerné. */
 
 
 /*
- * Retourne l'abscisse d'un composant.
+ * Retourne la couleur du premier plan d'un composant.
  */
-int recuperer_x(const Composant c) /* Le composant concerné. */
+couleur recuperer_premier_plan(const Composant c) /* Le composant concerné. */
 {
-  /* Retourne l'abscisse du composant. */
-  return (int) c->x;
+  /* Retourne la couleur du premier plan du composant. */
+  return c->premier_plan;
 }
 
 
 
 /*
- * Modifie l'ordonnée d'un composant.
+ * Modifie la couleur de l'arrière plan d'un composant.
  */
-void changer_y(Composant c, /* Le composant concerné. */
-               int       y) /* La nouvelle ordonnée. */
+void changer_arriere_plan(Composant c,       /* Le composant concerné. */
+                          couleur   couleur) /* La nouvelle couleur. */
 {
-  /* Modifie l'ordonnée du composant. */
-  c->y = (short) y;
+  /* Modifie la couleur de l'arrière plan du composant. */
+  c->arriere_plan = couleur;
 
   /* Rafraîchit la fenêtre si nécessaire. */
   if (c->fenetre)
@@ -185,41 +201,12 @@ void changer_y(Composant c, /* Le composant concerné. */
 
 
 /*
- * Retourne l'ordonnée d'un composant.
+ * Retourne la couleur de l'arrière plan d'un composant.
  */
-int recuperer_y(const Composant c) /* Le composant concerné. */
+couleur recuperer_arriere_plan(const Composant c) /* Le composant concerné. */
 {
-  /* Retourne l'ordonnée du composant. */
-  return (int) c->y;
-}
-
-
-
-/*
- * Modifie la couleur d'un composant.
- */
-void changer_couleur(Composant c,       /* Le composant concerné. */
-                     couleur   couleur) /* La nouvelle couleur. */
-{
-  /* Modifie la couleur du composant. */
-  c->couleur = couleur;
-
-  /* Rafraîchit la fenêtre si nécessaire. */
-  if (c->fenetre)
-  {
-    rafraichir(c->fenetre);
-  }
-}
-
-
-
-/*
- * Retourne la couleur d'un composant.
- */
-couleur recuperer_couleur(const Composant c) /* Le composant concerné. */
-{
-  /* Retourne la couleur du composant. */
-  return c->couleur;
+  /* Retourne la couleur de l'arrière plan du composant. */
+  return c->arriere_plan;
 }
 
 
@@ -238,7 +225,7 @@ void changer_nature(Composant c,      /* Le composant concerné. */
   }
   else
   {
-    fprintf(stderr, "changer_nature : la nature d'un composant est unique.\n");
+    fprintf(stderr, "changer_nature() : la nature d'un composant est unique.\n");
   }
 }
 

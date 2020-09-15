@@ -26,7 +26,7 @@ struct maillon
 /*
  * Crée une nouvelle file.
  */
-File creer_file();
+File creer_file(void);
 
 /*
  * Ajoute un composant à (la fin d') une file.

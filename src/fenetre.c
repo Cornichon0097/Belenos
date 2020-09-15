@@ -25,7 +25,7 @@ struct fenetre
   GC        contexte_graphique; /* Le contexte graphique. */
   Atom      fermeture;          /* L'action de fermeture. */
   File      composants;         /* La file des composants graphiques. */
-  Grille    gestionnaire;
+  /* Grille    gestionnaire; */
 };
 
 
@@ -91,9 +91,9 @@ Fenetre creer_fenetre(int          x,       /* L'abscisse, en pixels. */
 
   if (proprietes)
   {
-    proprietes->flags  = PPosition;
-    proprietes->x      = x;
-    proprietes->y      = y;
+    proprietes->flags = PPosition;
+    proprietes->x     = x;
+    proprietes->y     = y;
 
     /* Application des proprietés souhaitées à la fenêtre. */
     XSetWMNormalHints(nouvelle->affichage, nouvelle->ecran_principal, proprietes);
@@ -101,8 +101,8 @@ Fenetre creer_fenetre(int          x,       /* L'abscisse, en pixels. */
   }
   else
   {
-    fprintf(stderr, "creer_fenetre : impossible de placer la fenêtre ");
-    fprintf(stderr, "aux coordonnées demadées.\n");
+    fprintf(stderr, "creer_fenetre : impossible de placer ");
+    fprintf(stderr, "la fenêtre aux coordonnées demadées.\n");
   }
 
   /* Les événements gérés par la fenêtre. Ici, la fenêtre référencera dans une file
@@ -222,8 +222,7 @@ Atom fermeture(const Fenetre f) /* La fenêtre concernée. */
  */
 void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
 {
-  struct maillon * m = top(a_rafraichir->composants); /* Le premier maillon. */
-  XWindowAttributes a;
+  struct maillon *  m = top(a_rafraichir->composants); /* Le premier maillon. */
 
 
   /* Efface la fenêtre. */
@@ -236,9 +235,6 @@ void rafraichir(const Fenetre a_rafraichir) /* La fenêtre à rafraîchir. */
     /* Une fois le composant dessiné, on passe au suivant. */
     m = m->suivant;
   }
-
-  XGetWindowAttributes(a_rafraichir->affichage, a_rafraichir->ecran_principal, &a);
-  printf("%u\n", a.width);
 }
 
 
@@ -253,7 +249,7 @@ void ajouter(const Fenetre destination, /* La fenêtre destination. */
   /* Vérifie que le composant à ajouter n'est pas nul. */
   if (a_ajouter == NULL)
   {
-    fprintf(stderr, "ajouter : le composant à ajouté est nul.\n");
+    fprintf(stderr, "ajouter() : le composant à ajouté est nul.\n");
     return;
   }
 

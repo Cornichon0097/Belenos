@@ -16,7 +16,6 @@ OFILES = $(OBJECT)$(MAIN).o \
          $(OBJECT)fenetre.o \
 				 $(OBJECT)file.o \
 				 $(OBJECT)composant.o \
-				 $(OBJECT)rectangle.o \
 				 $(OBJECT)evenement.o
 
 
@@ -31,7 +30,6 @@ $(EXECUTABLE): $(OFILES)
 $(OBJECT)main.o: $(EXEMPLE)main.c \
 	               $(INCLUDE)fenetre.h \
 							   $(INCLUDE)couleur.h \
-								 $(INCLUDE)rectangle.h \
 								 $(INCLUDE)evenement.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -50,11 +48,6 @@ $(OBJECT)composant.o: $(SOURCE)composant.c \
 											$(INCLUDE)couleur.h \
 											$(INCLUDE)fenetre.h
 	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(OBJECT)rectangle.o: $(SOURCE)rectangle.c \
-	                    $(INCLUDE)rectangle.h \
-									    $(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
 
 $(OBJECT)evenement.o: $(SOURCE)evenement.c \
 	                    $(INCLUDE)evenement.h \
