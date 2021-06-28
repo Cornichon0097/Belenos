@@ -1,84 +1,99 @@
-CC = gcc
-CFLAGS = -Wall -pedantic -ansi -g
+SRCDIR      = src
+INCLUDEDIR  = include
+EXAMPLESDIR = examples
+BINDIR      = bin
 
-RM = rm -f
+CC     = gcc
+CFLAGS = -ansi \
+         -pedantic \
+         -Wall \
+         -Wextra \
+         -Wwrite-strings \
+         -Wstrict-prototypes \
+         -Wunreachable-code \
+         -Werror \
+         -g \
+         -I$(INCLUDEDIR)
 
-EXEMPLE = ./exemples/
-INCLUDE = ./include/
-SOURCE = ./src/
-OBJECT = ./obj/
+LD      = gcc
+LDFLAGS = -lX11
 
-MAIN = main_rectangle
-EXECUTABLE = executable.out
+CFILES = $(SRCDIR)/color.c \
+         $(SRCDIR)/window.c \
+         $(SRCDIR)/event.c \
+         $(SRCDIR)/component.c \
+         $(SRCDIR)/panel.c \
+         $(EXAMPLESDIR)/sample.c
 
-OFILES = $(OBJECT)$(MAIN).o \
-         $(OBJECT)fenetre.o \
-				 $(OBJECT)file.o \
-				 $(OBJECT)composant.o \
-				 $(OBJECT)point.o \
-				 $(OBJECT)rectangle.o \
-				 $(OBJECT)etiquette.o \
-				 $(OBJECT)evenement.o
+OFILES = $(BINDIR)/color.o \
+         $(BINDIR)/window.o \
+         $(BINDIR)/event.o \
+         $(BINDIR)/component.o \
+         $(BINDIR)/panel.o \
+         $(BINDIR)/sample.o
+
+TARGET = $(BINDIR)/sample.out
+
+DEPENDFILE = .depend
 
 
-but: $(OBJECT) $(EXECUTABLE)
+all: $(TARGET)
 
-$(OBJECT):
+$(TARGET): $(BINDIR) $(OFILES)
+	$(LD) -o $@ $(OFILES) $(LDFLAGS)
+
+$(BINDIR):
 	mkdir $@
 
-$(EXECUTABLE): $(OFILES)
-	$(CC) $(CFLAGS) -o $@ $(OFILES) -lX11
-
-$(OBJECT)main_rectangle.o: $(EXEMPLE)main_rectangle.c \
-	                         $(INCLUDE)fenetre.h \
-							             $(INCLUDE)couleur.h \
-								           $(INCLUDE)rectangle.h \
-								           $(INCLUDE)evenement.h
+$(BINDIR)/sample.o: $(EXAMPLESDIR)/sample.c \
+                    $(INCLUDEDIR)/belenos/color.h \
+                    $(INCLUDEDIR)/belenos/window.h \
+                    $(INCLUDEDIR)/belenos/event.h \
+                    $(INCLUDEDIR)/belenos/panel.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)fenetre.o: $(SOURCE)fenetre.c \
-                    $(INCLUDE)fenetre.h \
-										$(INCLUDE)file.h \
-										$(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
-
-$(OBJECT)file.o: $(SOURCE)file.c \
-	               $(INCLUDE)file.h
+$(BINDIR)/color.o: $(SRCDIR)/color.c \
+                   $(INCLUDEDIR)/belenos/color.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)composant.o: $(SOURCE)composant.c \
-	                    $(INCLUDE)composant.h \
-											$(INCLUDE)couleur.h \
-											$(INCLUDE)fenetre.h
+$(BINDIR)/window.o: $(SRCDIR)/window.c \
+                    $(INCLUDEDIR)/belenos/window.h \
+                    $(INCLUDEDIR)/belenos/component.h \
+                    $(INCLUDEDIR)/belenos/color.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)point.o: $(SOURCE)point.c \
-	                $(INCLUDE)point.h \
-									$(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+$(BINDIR)/event.o: $(SRCDIR)/event.c \
+                   $(INCLUDEDIR)/belenos/event.h \
+                   $(INCLUDEDIR)/belenos/window.h
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)rectangle.o: $(SOURCE)rectangle.c \
-	                    $(INCLUDE)rectangle.h \
-									    $(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+$(BINDIR)/component.o: $(SRCDIR)/component.c \
+                       $(INCLUDEDIR)/belenos/component.h \
+                       $(INCLUDEDIR)/belenos/color.h \
+                       $(INCLUDEDIR)/belenos/window.h
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJECT)etiquette.o: $(SOURCE)etiquette.c \
-	                    $(INCLUDE)etiquette.h \
-									    $(INCLUDE)composant.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
-
-$(OBJECT)evenement.o: $(SOURCE)evenement.c \
-	                    $(INCLUDE)evenement.h \
-											$(INCLUDE)fenetre.h
-	$(CC) $(CFLAGS) -o $@ -c $< -lX11
+$(BINDIR)/panel.o: $(SRCDIR)/panel.c \
+                   $(INCLUDEDIR)/belenos/color.h \
+                   $(INCLUDEDIR)/belenos/window.h \
+                   $(INCLUDEDIR)/belenos/component.h \
+                   $(INCLUDEDIR)/belenos/panel.h
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 
-run: but
-	./$(EXECUTABLE)
+run: all
+	./$(TARGET)
+
+depend:
+	$(CC) -I$(INCLUDEDIR) -E -MM $(CFILES) > $(DEPENDFILE)
 
 clean:
-	$(RM) $(OFILES)
+	rm -f $(OFILES) $(TARGET) $(DEPENDFILE)
 
-.PHONY: but \
-	      run \
-				clean
+mrproper: clean all
+
+.PHONY: all \
+        run \
+        depend \
+        clean \
+        mrproper
