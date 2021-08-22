@@ -3,24 +3,24 @@
 #include <X11/Xlib.h>
 
 #include <belenos/color.h>
-#include <belenos/window.h>
+#include <belenos/frame.h>
 #include <belenos/component.h>
 
 
 
-component_s * new_component(const int     x,
-                            const int     y,
-                            const color_t color)
+b_component_s * b_new_component(const short     x,
+                                const short     y,
+                                const b_color_t color)
 {
-  struct component * component;
+  struct b_component * component;
 
-  component = (struct component *) malloc(sizeof(struct component));
+  component = (struct b_component *) malloc(sizeof(struct b_component));
 
   if (component)
   {
-    set_component(component, x, y, color);
-    set_drawer(component, NULL);
-    set_destroyer(component, NULL);
+    b_set_component(component, x, y, color);
+    b_set_drawer(component, NULL);
+    b_set_destroyer(component, NULL);
   }
 
   return component;
@@ -28,32 +28,31 @@ component_s * new_component(const int     x,
 
 
 
-void set_component(struct component * const component,
-                   const int                x,
-                   const int                y,
-                   const color_t            color)
+void b_set_component(struct b_component * const component,
+                     const short                x,
+                     const short                y,
+                     const b_color_t            color)
 {
-  component->window    = NULL;
-  component->x         = x;
-  component->y         = y;
-  component->color     = color;
+  b_set_point(&(component->coordinates), x, y);
+  component->frame = NULL;
+  component->color = color;
 }
 
 
 
-void set_window(component_s * const component,
-                window_s    * const window)
+void b_set_frame(b_component_s * const component,
+                 b_frame_s     * const frame)
 {
   if (component)
   {
-    component->window = window;
+    component->frame = frame;
   }
 }
 
 
 
-void set_drawer(component_s * const component,
-                const drawer_t      drawer)
+void b_set_drawer(b_component_s * const component,
+                  const b_drawer_t      drawer)
 {
   if (component)
   {
@@ -63,7 +62,7 @@ void set_drawer(component_s * const component,
 
 
 
-void draw_component(const component_s * const component)
+void b_draw_component(const b_component_s * const component)
 {
   if (component)
   {
@@ -76,8 +75,8 @@ void draw_component(const component_s * const component)
 
 
 
-void set_destroyer(component_s * const component,
-                   const destroyer_t   destroyer)
+void b_set_destroyer(b_component_s * const component,
+                     const b_destroyer_t   destroyer)
 {
   if (component)
   {
@@ -87,7 +86,7 @@ void set_destroyer(component_s * const component,
 
 
 
-void destroy_component(component_s * const component)
+void b_destroy_component(b_component_s * const component)
 {
   if (component)
   {

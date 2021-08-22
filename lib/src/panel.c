@@ -1,62 +1,61 @@
 #include <stdlib.h>
 
 #include <belenos/color.h>
-#include <belenos/window.h>
+#include <belenos/draw.h>
+#include <belenos/frame.h>
 #include <belenos/component.h>
 #include <belenos/panel.h>
 
 
 
-panel_s * new_panel(const int          x,
-                    const int          y,
-                    const unsigned int width,
-                    const unsigned int height,
-                    const color_t      color)
+b_panel_s * b_new_panel(const short          x,
+                        const short          y,
+                        const unsigned short width,
+                        const unsigned short height,
+                        const b_color_t      color)
 {
-  struct panel * panel;
+  struct b_panel * panel;
 
-  panel = (struct panel *) malloc(sizeof(struct panel));
+  panel = (struct b_panel *) malloc(sizeof(struct b_panel));
 
   if (panel)
   {
-    set_panel(panel, x, y, color, width, height);
-    set_drawer((component_s *) panel, &draw_panel);
-    set_destroyer((component_s *) panel, &destroy_panel);
+    b_set_panel(panel, x, y, color, width, height);
+    b_set_drawer((b_component_s *) panel, &b_draw_panel);
+    b_set_destroyer((b_component_s *) panel, &b_destroy_panel);
   }
 
-  return (panel_s *) panel;
+  return (b_panel_s *) panel;
 }
 
 
 
-void set_panel(struct panel * const panel,
-               const int                x,
-               const int                y,
-               const color_t            color,
-               const unsigned int       width,
-               const unsigned int       height)
+void b_set_panel(struct b_panel * const panel,
+                 const short            x,
+                 const short            y,
+                 const b_color_t        color,
+                 const unsigned short   width,
+                 const unsigned short   height)
 {
-  set_component((component_s *) panel, x, y, color);
+  b_set_component((b_component_s *) panel, x, y, color);
   panel->width  = width;
   panel->height = height;
 }
 
 
 
-void draw_panel(const panel_s * const panel)
+void b_draw_panel(const b_panel_s * const panel)
 {
-  XSetForeground(get_display(panel->window), get_gc(panel->window),
-                 panel->color);
-  XFillRectangle(get_display(panel->window), get_window(panel->window),
-                 get_gc(panel->window), panel->x, panel->y,
-                 ((struct panel *) panel)->width,
-                 ((struct panel *) panel)->height);
-  XFlush(get_display(panel->window));
+  b_fill_rectangle(panel->frame,
+                   b_get_x(panel->coordinates), b_get_y(panel->coordinates),
+                   ((struct b_panel *) panel)->width,
+                   ((struct b_panel *) panel)->height,
+                   panel->color);
 }
 
 
 
-void destroy_panel(panel_s * const panel)
+void b_destroy_panel(b_panel_s * const panel)
 {
   free(panel);
 }

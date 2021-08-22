@@ -1,29 +1,28 @@
-#ifndef _RECTANGLE_H
-#define _RECTANGLE_H
+#ifndef _B_PANEL_H
+#define _B_PANEL_H
 
 #include <belenos/color.h>
-#include <belenos/window.h>
 #include <belenos/component.h>
 
 
-typedef component_s panel_s;
+typedef b_component_s b_panel_s;
 
-struct panel
+struct b_panel
 {
-  component_s  super;
-  unsigned int width;
-  unsigned int height;
+  b_component_s  super;
+  unsigned short width;
+  unsigned short height;
 };
 
 
 
-panel_s * new_panel(const int x, const int y, const unsigned int width, const unsigned int height, const color_t color);
+b_panel_s * b_new_panel(short x, short y, unsigned short width, unsigned short height, b_color_t color);
 
-void set_panel(struct panel * const panel, const int x, const int y, const color_t color, const unsigned int width, const unsigned int height);
+void b_set_panel(struct b_panel * panel, short x, short y, b_color_t color, unsigned short width, unsigned short height);
 
-void draw_panel(const panel_s * const panel);
+void b_draw_panel(const b_panel_s * panel);
 
-void destroy_panel(panel_s * const panel);
+void b_destroy_panel(b_panel_s * panel);
 
 
 #endif /* panel.h */

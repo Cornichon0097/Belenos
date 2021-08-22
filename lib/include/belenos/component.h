@@ -1,41 +1,41 @@
-#ifndef _COMPONENT_H
-#define _COMPONENT_H
+#ifndef _B_COMPONENT_H
+#define _B_COMPONENT_H
 
 #include <belenos/color.h>
-#include <belenos/window.h>
+#include <belenos/frame.h>
+#include <belenos/point.h>
 
 
-typedef struct component component_s;
+typedef struct b_component b_component_s;
 
-typedef void (* drawer_t)(const component_s * const);
-typedef void (* destroyer_t)(component_s * const);
+typedef void (* b_drawer_t)(const b_component_s *);
+typedef void (* b_destroyer_t)(b_component_s *);
 
 
-struct component
+struct b_component
 {
-  window_s  * window;
-  int         x;
-  int         y;
-  color_t     color;
-  drawer_t    drawer;
-  destroyer_t destroyer;
+  b_frame_s   * frame;
+  b_point_s     coordinates;
+  b_color_t     color;
+  b_drawer_t    drawer;
+  b_destroyer_t destroyer;
 };
 
 
 
-component_s * new_component(const int x, const int y, const color_t color);
+b_component_s * b_new_component(short x, short y, b_color_t color);
 
-void set_component(struct component * const component, const int x, const int y, const color_t color);
+void b_set_component(struct b_component * component, short x, short y, b_color_t color);
 
-void set_window(component_s * const component, window_s * const window);
+void b_set_frame(b_component_s * component, b_frame_s * frame);
 
-void set_drawer(component_s * const component, const drawer_t drawer);
+void b_set_drawer(b_component_s * component, b_drawer_t drawer);
 
-void draw_component(const component_s * const component);
+void b_draw_component(const b_component_s * component);
 
-void set_destroyer(component_s * const component, const destroyer_t destroyer);
+void b_set_destroyer(b_component_s * component, b_destroyer_t destroyer);
 
-void destroy_component(component_s * const component);
+void b_destroy_component(b_component_s * component);
 
 
 #endif /* component.h */

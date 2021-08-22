@@ -20,8 +20,8 @@ do
       ;;
     h) # Help.
       echo "Usage: ${0} [-o output_file] [-r rgb_file]"
-      echo "Default output file: ${output_file}"
-      echo "Default RGB file: ${rgb_file}"
+      echo "Default output file: ${output_file}."
+      echo "Default RGB file: ${rgb_file}."
       exit 0
       ;;
     :) # Missing argument.
@@ -35,8 +35,26 @@ do
   esac
 done
 
-# Cleans output file.
-rm -f ${output_file}
+# Checks if output file already exists.
+if [ -f ${output_file} ]
+then
+  echo "${0}: ${output_file} already exists."
+  read -p "Overwrite actual ${output_file}? [Y/n] " answer
+
+  case ${answer} in
+    Y) # Yes: cleans output file.
+      rm -f ${output_file}
+      ;;
+    n) # No.
+      echo "${0}: abort."
+      exit 0
+      ;;
+    ?) # Invalid answer.
+      echo "${0}: invalid answer ${answer}." >&2
+      exit 3
+      ;;
+  esac
+fi
 
 # Looks for RGB file.
 if [ -f ${rgb_file} ]
@@ -59,7 +77,7 @@ then
   printf "/*\n * Some colors.\n */\n" >> ${output_file}
   for line in $(awk '{print NR}' rgb-tmp.txt)
   do
-    # Puts #define instruction in output file.
+    # Puts '#define' in output file.
     printf "#define " >> ${output_file}
 
     # Puts color name in output file.
@@ -80,7 +98,7 @@ then
     done
 
     # Puts color value in output file.
-    printf "0x%06x\n" ${color} >> ${output_file}
+    printf "0x%06X\n" ${color} >> ${output_file}
   done
 
   # Puts color type definition in output file.
@@ -94,7 +112,7 @@ then
   printf "\n\n" >> ${output_file}
   printf "#endif /* $(basename ${output_file}) */\n" >> ${output_file}
 
-  # Cleans temporally file.
+  # Cleans temporary file.
   rm rgb-tmp.txt
 else
   echo "${0}: cannot find ${rgb_file}: no such file or directory."

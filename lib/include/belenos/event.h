@@ -1,11 +1,11 @@
-#ifndef _EVENT_H
-#define _EVENT_H
+#ifndef _B_EVENT_H
+#define _B_EVENT_H
 
-#include <belenos/window.h>
+#include <belenos/frame.h>
 
 
 
-int is_open(struct window * const window);
+int b_is_open(b_frame_s * frame);
 
 
 #endif /* event.h */
