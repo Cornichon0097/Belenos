@@ -1,8 +1,5 @@
 #include <stdlib.h>
 
-#include <X11/Xlib.h>
-
-#include <belenos/color.h>
 #include <belenos/frame.h>
 #include <belenos/component.h>
 

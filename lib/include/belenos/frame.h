@@ -34,8 +34,6 @@ typedef struct b_frame b_frame_s;
  */
 b_frame_s * b_new_frame(int x, int y, unsigned int width, unsigned int height);
 
-void b_open_frame(b_frame_s * frame);
-
 Display * b_get_display(const b_frame_s * frame);
 
 Window b_get_window(const b_frame_s * frame);
@@ -46,7 +44,9 @@ Atom b_get_close_operation(const b_frame_s * frame);
 
 void b_add_component(b_frame_s * frame, b_component_s * component);
 
-void b_close_frame(b_frame_s * frame);
+void b_show_frame(b_frame_s * frame);
+
+void b_hide_frame(b_frame_s * frame);
 
 void b_destroy_frame(b_frame_s * frame);
 

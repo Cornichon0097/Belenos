@@ -18,7 +18,7 @@ struct b_panel
 
 b_panel_s * b_new_panel(short x, short y, unsigned short width, unsigned short height, b_color_t color);
 
-void b_set_panel(struct b_panel * panel, short x, short y, b_color_t color, unsigned short width, unsigned short height);
+void b_set_panel(struct b_panel * panel, short x, short y, unsigned short width, unsigned short height, b_color_t color);
 
 void b_draw_panel(const b_panel_s * panel);
 

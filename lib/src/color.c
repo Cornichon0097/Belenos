@@ -6,9 +6,6 @@
  * gives possibility to use rgb colors with Belenos.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include <belenos/color.h>
 
 

@@ -1,9 +1,8 @@
 #include <stdlib.h>
 
-#include <belenos/color.h>
-#include <belenos/draw.h>
 #include <belenos/frame.h>
-#include <belenos/component.h>
+#include <belenos/point.h>
+#include <belenos/draw.h>
 #include <belenos/panel.h>
 
 
@@ -20,7 +19,7 @@ b_panel_s * b_new_panel(const short          x,
 
   if (panel)
   {
-    b_set_panel(panel, x, y, color, width, height);
+    b_set_panel(panel, x, y, width, height, color);
     b_set_drawer((b_component_s *) panel, &b_draw_panel);
     b_set_destroyer((b_component_s *) panel, &b_destroy_panel);
   }
@@ -33,9 +32,9 @@ b_panel_s * b_new_panel(const short          x,
 void b_set_panel(struct b_panel * const panel,
                  const short            x,
                  const short            y,
-                 const b_color_t        color,
                  const unsigned short   width,
-                 const unsigned short   height)
+                 const unsigned short   height,
+                 const b_color_t        color)
 {
   b_set_component((b_component_s *) panel, x, y, color);
   panel->width  = width;
@@ -47,7 +46,7 @@ void b_set_panel(struct b_panel * const panel,
 void b_draw_panel(const b_panel_s * const panel)
 {
   b_fill_rectangle(panel->frame,
-                   b_get_x(panel->coordinates), b_get_y(panel->coordinates),
+                   b_get_x((b_point_s *) panel), b_get_y((b_point_s *) panel),
                    ((struct b_panel *) panel)->width,
                    ((struct b_panel *) panel)->height,
                    panel->color);

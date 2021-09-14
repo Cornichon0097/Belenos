@@ -20,9 +20,9 @@ void b_set_x(b_point_s * const point,
 
 
 
-short b_get_x(const b_point_s point)
+short b_get_x(const b_point_s * const point)
 {
-  return point.x;
+  return point->x;
 }
 
 
@@ -35,7 +35,7 @@ void b_set_y(b_point_s * const point,
 
 
 
-short b_get_y(const b_point_s point)
+short b_get_y(const b_point_s * const point)
 {
-  return point.y;
+  return point->y;
 }

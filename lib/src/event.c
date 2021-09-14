@@ -1,7 +1,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-#include <belenos/frame.h>
 #include <belenos/event.h>
 
 

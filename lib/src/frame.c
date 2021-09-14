@@ -1,9 +1,6 @@
 #include <stdlib.h>
-#include <stdio.h>
 
-#include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/Xatom.h>
 
 #include <belenos/frame.h>
 #include <belenos/component.h>
@@ -166,22 +163,6 @@ struct b_frame * b_new_frame(const int          x,
 
 
 
-void b_open_frame(struct b_frame * const frame)
-{
-  XEvent event;
-
-  XMapWindow(frame->display, frame->window);
-
-  /* Waiting for expose event. */
-  do
-  {
-    XNextEvent(frame->display, &event);
-  }
-  while (event.type != Expose);
-}
-
-
-
 Display * b_get_display(const struct b_frame * const frame)
 {
   return frame->display;
@@ -219,7 +200,23 @@ void b_add_component(struct b_frame * const frame,
 
 
 
-void b_close_frame(struct b_frame * const frame)
+void b_show_frame(struct b_frame * const frame)
+{
+  XEvent event;
+
+  XMapWindow(frame->display, frame->window);
+
+  /* Waiting for expose event. */
+  do
+  {
+    XNextEvent(frame->display, &event);
+  }
+  while (event.type != Expose);
+}
+
+
+
+void b_hide_frame(struct b_frame * const frame)
 {
   XUnmapWindow(frame->display, frame->window);
   XCheckTypedWindowEvent(frame->display, frame->window, UnmapNotify, NULL);

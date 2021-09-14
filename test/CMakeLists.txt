@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(test)
+project(start)
 
 # Main example.
-add_executable(sample.out sample.c)
-target_link_libraries(sample.out PUBLIC libbelenos)
+add_executable(${PROJECT_NAME} draws.c)
+target_link_libraries(${PROJECT_NAME} PUBLIC libbelenos)

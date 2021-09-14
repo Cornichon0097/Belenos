@@ -1,3 +1,7 @@
+#include <stdlib.h>
+
+#include <X11/Xlib.h>
+
 #include <belenos/draw.h>
 
 
@@ -55,7 +59,7 @@ void b_draw_arc(const b_frame_s * const frame,
 {
   XSetForeground(b_get_display(frame), b_get_gc(frame), color);
   XDrawArc(b_get_display(frame), b_get_window(frame), b_get_gc(frame),
-           x, y, width, height, angle1, angle2);
+           x, y, width, height, angle1 * 64, angle2 * 64);
   XFlush(b_get_display(frame));
 }
 
@@ -87,13 +91,16 @@ void b_fill_arc(const b_frame_s * const frame,
 {
   XSetForeground(b_get_display(frame), b_get_gc(frame), color);
   XFillArc(b_get_display(frame), b_get_window(frame), b_get_gc(frame),
-           x, y, width, height, angle1, angle2);
+           x, y, width, height, angle1 * 64, angle2 * 64);
   XFlush(b_get_display(frame));
 }
 
 
 
-void b_fill_polygon(const b_frame_s * frame, b_point_s * const points, int nb_points, b_color_t color)
+void b_fill_polygon(const b_frame_s * const frame,
+                    b_point_s       * const points,
+                    const int               nb_points,
+                    const b_color_t         color)
 {
   XSetForeground(b_get_display(frame), b_get_gc(frame), color);
   XFillPolygon(b_get_display(frame), b_get_window(frame), b_get_gc(frame),

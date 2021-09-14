@@ -2,6 +2,8 @@
 #define _B_DRAW_H
 
 #include <belenos/frame.h>
+#include <belenos/point.h>
+#include <belenos/color.h>
 
 
 

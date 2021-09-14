@@ -21,10 +21,10 @@ IFILES = $(shell ls $(LIBDIR)/include/belenos/*.h)
 
 # Main target.
 #TARGET = $(BUILDDIR)/lib/libbelenos.a # Default main target.
-TARGET = $(BUILDDIR)/$(TESTDIR)/sample.out
+TARGET = $(BUILDDIR)/$(TESTDIR)/start
 
 # Target files (can be empty).
-TARGETFILES = $(TESTDIR)/sample.c
+TARGETFILES = $(shell ls $(TESTDIR)/*.c)
 
 # ========================== Targets and rules ========================== #
 # ----------------------------- Main target ----------------------------- #
